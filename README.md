@@ -19,6 +19,11 @@ Our vision is a world where people can stay fit, share knowledge about sports an
 
 ### SERVICES
 we offer a free to use app which gives the possibility to search or create classes realated to sport activities, which are happening in real life potentially all around the world. Users can attend classes, lead them or both.
+User: user or teacher
+Event: something a teacher wants to teach. (e.g. "Yoga class with Lisa")
+Classes: collection of meet-ups related to a certain event (e.g. "Every Wednesday at 14:00 at Muster Straße 1 Berlin)
+
+Each teacher can have multiple events ("I teach yoga" "I teach football") and each event can have 1 or more classes. Users book classes.
 
 ### PERSONA
 Max 20, new in Berlin, likes football but doesn't know anyone with whom he could play.
@@ -48,8 +53,8 @@ Layout should be structured in this way:
 - Pages:
 -- The home-page must contain a picture, a title, a subtitle and up to two different calls to actions above the fold. Below the fold a description of the app, mission/vision and some events as examples.
 -- Search page must contain a search form.
--- Event list page should contain a list of events according to user' search.
--- Event pages should contain information about the event.
+-- Event list page should contain a list of classes according to user' search.
+-- Event pages should contain information about the event and the related classes.
 -- User pages should contain information about the user.
 - FAQ section
 - Footer contains links to events categories, mission/vision, logo and name and copyright notice.
@@ -64,11 +69,21 @@ Sections with darker background:  7EBDC2
 Main call to actions: BB4430
 
 ### TASKS
+User Features:
+user id, username, password, date of birth, user type (teacher, not teacher), bio
+
+Event Feature:
+user id, event id, event name, categories, description
+
+Class Features:
+event id, time, location, spots available
+
 User:
 - create user
 - modify user
 - delete user
 - read user
+
 
 Event:
 - create event
@@ -76,8 +91,14 @@ Event:
 - delete event
 - read event
 
+Class:
+- create event
+- modify event
+- delete event
+- read event
+
 Interactions:
-- user joins event
+- user joins classes
 - user un/follows other users
 
 
