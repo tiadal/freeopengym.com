@@ -109,7 +109,7 @@ Interactions:
 | User attributes | <ul><li>bio optional (user might not want to give additional information)</li><li>date of birth optional (user might not want to give this information)</li></ul>
   
 ### Domain Model
-![Domain_Model](./domain_model_diagram.png)
+![Domain_Model](./domain_model_diagramv2.png)
 
 ### Class Model  
 ![Class_Model](./freeopengym_class_model.png)
