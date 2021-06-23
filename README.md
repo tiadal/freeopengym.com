@@ -107,6 +107,9 @@ Interactions:
 | Event: something a teacher wants to teach. (e.g. "Yoga class with Lisa") | Renaming **Event** to more intuitive **Course** |
 |User | split into <ul><li>Participant (can join course, but not hold any)</li><li>Teacher (can hold a course, but not join any)</li> |
 | User attributes | <ul><li>bio optional (user might not want to give additional information)</li><li>date of birth optional (user might not want to give this information)</li></ul>
+  
+### Domain Model
+![Domain_Model](./domain_model_diagram.png)
 
 ### Class Model  
 ![Class_Model](./freeopengym_class_model.png)
