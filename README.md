@@ -115,5 +115,5 @@ Interactions:
 ![Class_Model](./freeopengym_class_modelv2.png)
   
 ### Division of Work
-puchala-mag: Course, Class
+puchala-mag: Course, Class  
 Rudolchr: User
