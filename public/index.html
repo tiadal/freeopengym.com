@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>Freeopengym</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/8.6.8/firebase-app.js"></script>
@@ -17,6 +17,9 @@
     <script defer src="/__/firebase/8.6.8/firebase-analytics.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-remote-config.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
+    <script src = "js/c/initialize.js"></script>
+    <script src = "js/m/Course.js">
+    </script>
     <!-- 
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
@@ -39,7 +42,17 @@
     </style>
   </head>
   <body>
-    <div id="message">
+  <menu>
+    <li><a href = "createCourse.html"> Create </a> a new course</li>
+    <li><a href = "listAllCourses.html"> List </a>  all courses</li>
+    <li><a href = "updateCourse.html"> Update </a> a course</li>
+    <li><a href = "deleteCourse.html"> Delete </a> a course</li>
+
+  <!--  <li style = "margin-top:1em"><button id = "clearData" type = "button">Clear database </button></li>
+    <li> <button class = "generateTestData" type = "button" > Generate test data</button></li> -->
+  </menu>
+
+   <!-- <div id="message">
       <h2>Welcome</h2>
       <h1>Firebase Hosting Setup Complete</h1>
       <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
@@ -84,6 +97,6 @@
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
         }
       });
-    </script>
+    </script> -->
   </body>
 </html>
