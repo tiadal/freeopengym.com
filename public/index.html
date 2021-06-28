@@ -7,10 +7,13 @@
     <meta name="description" content="Freeopengym"/>
     <link rel="icon" type="image/png" href="favicon.ico">
 
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+
     <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.6.8/firebase-app.js"></script>
+    <!--<script defer src="/__/firebase/8.6.8/firebase-app.js"></script>-->
     <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
+    <!--<script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-database.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-functions.js"></script>
@@ -18,7 +21,7 @@
     <script defer src="/__/firebase/8.6.8/firebase-storage.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-analytics.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>-->
     <script src = "js/c/initialize.mjs"></script>
     <script type = module>
       import {clearData, generateTestData} from "./js/c/app.mjs";
@@ -28,12 +31,12 @@
       generateTestDataButton.addEventListener("click",generateTestData);
     </script>
     <script src="js/c/app.mjs" type="module"></script>
-
-    <!-- 
+    <script type = module src="js/v/courses.mjs"></script>
+    <!--
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
     -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <!--<script defer src="/__/firebase/init.js?useEmulator=true"></script>-->
 
     <style media="screen">
       body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
@@ -49,7 +52,6 @@
         body { border-top: 16px solid #ffa100; }
       }
     </style>
-      <script src="js/v/courses.mjs"></script>
   </head>
   <body>
   <menu>
@@ -58,8 +60,8 @@
     <li><button type="button" id="testData">Generate test data</button></li>
     <li><button type="button" id="clearData">Clear database</button></li>
 
-    <!--  <li style = "margin-top:1em"><button id = "clearData" type = "button">Clear database </button></li>
-      <li> <button class = "generateTestData" type = "button" > Generate test data</button></li> -->
+    <!--<li style = "margin-top:1em"><button id = "clearData" type = "button">Clear database </button></li>
+    <li> <button class = "generateTestData" type = "button" > Generate test data</button></li> -->
   </menu>
 
    <div id="message">
@@ -91,13 +93,13 @@
         try {
           let app = firebase.app();
           let features = [
-            'auth', 
-            'database', 
+            'auth',
+            'database',
             'firestore',
             'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
+            'messaging',
+            'storage',
+            'analytics',
             'remoteConfig',
             'performance',
           ].filter(feature => typeof app[feature] === 'function');
