@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Freeopengym: Manage Courses</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.6.8/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-functions.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-storage.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-analytics.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-remote-config.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
+
+    <link rel="icon" type="image/png" href="favicon.ico">
+
+    <script src="js/v/courses.mjs" type="module"></script>
+  </head>
+  <body>
+  <header>
+      <h1>Freeopengym</h1>
+  </header>
+  <main>
+    <!-- ======================================================= -->
+    <section id="Course-M" class="UI-Page">
+      <!-- ======================================================= -->
+      <h1>Manage course data</h1>
+      <ul class="menu">
+        <li>
+          <button type="button" id="retrieveAndListAll">
+            List all courses
+          </button>
+        </li>
+        <li>
+          <button type="button" id="create">
+            Create a new course
+          </button>
+        </li>
+        <!--TODO update and delete -->
+      </ul>
+    </section>
+    <!-- ======================================================= -->
+    <section id="Movie-R" class="UI-Page">
+      <!-- ======================================================= -->
+      <h1>List all courses</h1>
+        <table>
+          <thread>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Categories</th>
+              <th>Price</th>
+            </tr>
+          </thread>
+          <tbody></tbody>
+        </table>
+        <div class="button">
+            <button type="button" class="back-to-menu">Back to menu</button>
+        </div>
+    </section>
+    <!-- ======================================================= -->
+    <section id="Movie-C" class="UI-Page">
+      <!-- ======================================================= -->
+        <h1>Create a new course</h1>
+        <form>
+            <div class="field">
+                <label>ID: <input type="text" name="courseId"></label>
+            </div>
+            <div class="field">
+                <label>Name: <input type="text" name="courseName"></label>
+            </div>
+            <!--<div class="select-many">
+                <label>Categories:
+                    <select name="selectCategories" multiple="multiple"></select>
+                </label>
+            </div>
+
+            Simplified version for now:-->
+            <div class="field">
+                <label>Categories: <input type="text" name="categories"></label>
+            </div>
+            <div class="field">
+                <label>Price: <input type="text" name="price"></label>
+            </div>
+            <div class="field">
+                <label>Description: <input type="text" name="description"></label>
+            </div>
+            <div class="button-group">
+                <button type="submit" name="commit">Save</button>
+                <button type="button" class="back-to-menu">Back to menu</button>
+            </div>
+        </form>
+    </section>
+  </main>
+  </body>
+</html>
