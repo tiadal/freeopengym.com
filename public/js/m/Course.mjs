@@ -86,6 +86,13 @@ Course.add = async function (slots){
 /**
  *  Delete a course
  */
+Course.destroy(courseId){
+  try{
+    await db.collection("courses").doc(courseId).delete();
+  } catch(e){
+    console.log("Error deleting course with id " + courseId + ": " + e);
+  }
+}
 
 /**
  *  Update a course
