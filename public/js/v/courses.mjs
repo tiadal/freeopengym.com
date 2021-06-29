@@ -6,7 +6,7 @@ import Course from "../m/Course.mjs";
 /***************************************************************
  Load data
  ***************************************************************/
-await Course.retrieveAll();
+//await Course.retrieveAll();
 
 /***************************************************************
  Set up general, use-case-independent UI elements
@@ -36,8 +36,10 @@ document.getElementById("retrieveAndListAll")
     document.getElementById("Course-R").style.display = "block";
     const tableBodyEl = document.querySelector("section#Course-R>table>tbody");
     tableBodyEl.innerHTML = "";  // drop old content
-    for (const key of Object.keys( Course.instances)) {
-        const course = Course.instances[key];
+    const courseInstances = await Course.retrieveAll();
+    console.log(courseInstances);
+    for (const key of Object.keys( courseInstances/*Course.instances*/)) {
+        const course = courseInstances[key];
         const row = tableBodyEl.insertRow();
         row.insertCell().textContent = course.courseId;
         row.insertCell().textContent = course.courseName;
