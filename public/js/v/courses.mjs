@@ -6,7 +6,7 @@ import Course from "../m/Course.mjs";
 /***************************************************************
  Load data
  ***************************************************************/
-Course.retrieveAll();
+await Course.retrieveAll();
 
 /***************************************************************
  Set up general, use-case-independent UI elements
