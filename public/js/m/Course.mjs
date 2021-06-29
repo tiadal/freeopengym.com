@@ -76,7 +76,7 @@ Course.add = async function (slots){
     const courseCollRef = db.collection("courses"),
           courseDocRef = courseCollRef.doc( slots.courseId);
     try {
-        await courseDocRef.set (slots);
+        await courseDocRef.set(slots);
     } catch (e) {
         console.error(`Error when adding course record: ${e}`);
         return;
@@ -120,7 +120,7 @@ Course.retrieveAll = async function(){
         console.error(`Error when retrieving course record ${e}`)
         return null;
     }
-    const courseDocs = coursesQuerySnapshot,
+    const courseDocs = coursesQuerySnapshot.docs,
           courseRecords = courseDocs.map( d => d.data());
     console.log(`${courseRecords.length} course records retrieved.`);
     return courseRecords;

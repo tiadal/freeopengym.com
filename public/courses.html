@@ -47,9 +47,10 @@
         </li>
         <!--TODO update and delete -->
       </ul>
+      <div class="button"><a href="index.html">Back to Main menu</a></div>
     </section>
     <!-- ======================================================= -->
-    <section id="Movie-R" class="UI-Page">
+    <section id="Course-R" class="UI-Page">
       <!-- ======================================================= -->
       <h1>List all courses</h1>
         <table>
@@ -68,7 +69,7 @@
         </div>
     </section>
     <!-- ======================================================= -->
-    <section id="Movie-C" class="UI-Page">
+    <section id="Course-C" class="UI-Page">
       <!-- ======================================================= -->
         <h1>Create a new course</h1>
         <form>
@@ -92,7 +93,10 @@
                 <label>Price: <input type="text" name="price"></label>
             </div>
             <div class="field">
-                <label>Description: <input type="text" name="description"></label>
+                <label>Description:
+                    <textarea id="description" name="description" rows="5" cols="40" placeholder="Enter the description here">
+                    </textarea>
+                </label>
             </div>
             <div class="button-group">
                 <button type="submit" name="commit">Save</button>

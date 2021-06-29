@@ -13,7 +13,7 @@ await Course.retrieveAll();
  ***************************************************************/
 // set up back-to-menu buttons for all CRUD UIs
 for (const btn of document.querySelectorAll("button.back-to-menu")) {
-    btn.addEventListener("click", await refreshManageDataUI);
+    btn.addEventListener("click", refreshManageDataUI);
 }
 // neutralize the submit event for all CRUD UIs
 for (const frm of document.querySelectorAll("section > form")) {
@@ -27,14 +27,14 @@ for (const frm of document.querySelectorAll("section > form")) {
 window.addEventListener("beforeunload", Course.saveAll);
 
 /**********************************************
- Use case Retrieve/List All Movies
+ Use case Retrieve/List All Courses
  **********************************************/
 document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
 
-    document.getElementById("Movie-M").style.display = "none";
-    document.getElementById("Movie-R").style.display = "block";
-    const tableBodyEl = document.querySelector("section#Movie-R>table>tbody");
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-R").style.display = "block";
+    const tableBodyEl = document.querySelector("section#Course-R>table>tbody");
     tableBodyEl.innerHTML = "";  // drop old content
     for (const key of Object.keys( Course.instances)) {
         const course = Course.instances[key];
@@ -47,12 +47,12 @@ document.getElementById("retrieveAndListAll")
 });
 
 /**********************************************
- Use case Create Movie
+ Use case Create Course
  **********************************************/
-const createFormEl = document.querySelector("section#Movie-C > form");
-document.getElementById("create").addEventListener("click",function () {
-    document.getElementById("Movie-M").style.display = "none";
-    document.getElementById("Movie-C").style.display = "block";
+const createFormEl = document.querySelector("section#Course-C > form");
+document.getElementById("create").addEventListener("click",async function () {
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-C").style.display = "block";
     createFormEl.reset();
 });
 
@@ -69,16 +69,16 @@ createFormEl["commit"].addEventListener("click", async function () {
 });
 
 /**********************************************
- * Refresh the Manage Movies Data UI
+ * Refresh the Manage Courses Data UI
  **********************************************/
-async function refreshManageDataUI() {
-    // show the manage movie UI and hide the other UIs
-    document.getElementById("Movie-M").style.display = "block";
-    document.getElementById("Movie-R").style.display = "none";
-    document.getElementById("Movie-C").style.display = "none";
-    document.getElementById("Movie-U").style.display = "none";
-    document.getElementById("Movie-D").style.display = "none";
+function refreshManageDataUI() {
+    // show the manage course UI and hide the other UIs
+    document.getElementById("Course-M").style.display = "block";
+    document.getElementById("Course-R").style.display = "none";
+    document.getElementById("Course-C").style.display = "none";
+//    document.getElementById("Course-U").style.display = "none";
+//    document.getElementById("Course-D").style.display = "none";
 }
 
-// Set up Manage Movie UI
-await refreshManageDataUI();
+// Set up Manage Course UI
+refreshManageDataUI();
