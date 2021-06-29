@@ -96,7 +96,7 @@ Course.add = async function (slots){
  */
 Course.retrieve = async function (courseId){
     const courseCollRef = db.collection("courses"),
-          courseDocRef = booksCollRef.doc( courseId);
+          courseDocRef = courseCollRef.doc( courseId);
     let courseDocSnapshot = null;
     try {
         courseDocSnapshot = await courseDocRef.get();
@@ -112,7 +112,7 @@ Course.retrieve = async function (courseId){
  *  Retrieve and list all courses
  */
 Course.retrieveAll = async function(){
-    const coursesCollRef = db.collection("books");
+    const coursesCollRef = db.collection("courses");
     let coursesQuerySnapshot = null;
     try {
         coursesQuerySnapshot = await coursesCollRef.get();

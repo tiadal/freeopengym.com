@@ -12,8 +12,7 @@ if (!firebase.apps.length) {
         //authDomain:"freeopengym-69dae.firebaseapp.com",
         //projectId:"freeopengym-69dae"
     });
-}
-else {
+} else {
 // if already initialized
   console.log("WARN: already initialized");
     firebase.app();
