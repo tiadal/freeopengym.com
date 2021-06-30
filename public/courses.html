@@ -52,21 +52,51 @@
     <!-- ======================================================= -->
     <section id="Course-R" class="UI-Page">
       <!-- ======================================================= -->
-      <h1>List all courses</h1>
-        <table>
-          <thread>
+      <h1>Course details</h1>
+        <table id="courseTable">
+          <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Categories</th>
               <th>Price</th>
             </tr>
-          </thread>
+          </thead>
           <tbody></tbody>
         </table>
+        <button type="button" id="retrieveOne">
+            Test one course
+        </button>
         <div class="button">
             <button type="button" class="back-to-menu">Back to menu</button>
         </div>
+    </section>
+    <!-- ==================retrieve one========================== -->
+    <section id="Course-RO" class="UI-Page">
+      <!-- ======================================================= -->
+      <h1>List all courses</h1>
+        <form>
+        <div class="field">
+          <label>ID:
+            <output name="courseId"></output>
+          </label>
+        </div>
+        <div class="field">
+          <label>Name: <output type="text" name="courseName"></output></label>
+        </div>
+        <div class="field">
+          <label>Categories: <output type="text" name="categories"></output></label>
+        </div>
+        <div class="field">
+          <label>Price: <output type="text" name="price"></output></label>
+        </div>
+        <div class="field">
+          <label>Description: <output type="text" name="description"></output></label>
+        </div>
+        <div class="button">
+          <button type="button" id="back-to-courses">Back to courses</button>
+        </div>
+      </form>
     </section>
     <!-- ======================================================= -->
     <section id="Course-C" class="UI-Page">
@@ -94,7 +124,7 @@
             </div>
             <div class="field">
                 <label>Description:
-                    <textarea id="description" name="description" rows="5" cols="40" placeholder="Enter the description here">
+                    <textarea id="description" name="description" rows="5" cols="40">
                     </textarea>
                 </label>
             </div>

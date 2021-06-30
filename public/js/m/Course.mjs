@@ -64,7 +64,7 @@ class Course {
  *** Class-level ("static") properties **********
  ************************************************/
 // initially an empty collection (in the form of a map)
-Course.instances = {};
+//Course.instances = {};
 
 /********************************************************
  *** Class-level ("static") storage management methods ***
@@ -86,7 +86,7 @@ Course.add = async function (slots){
 /**
  *  Delete a course
  */
-Course.destroy(courseId){
+Course.destroy = async function (courseId){
   try{
     await db.collection("courses").doc(courseId).delete();
   } catch(e){
@@ -101,7 +101,8 @@ Course.destroy(courseId){
 /**
  *  Retrieve a concrete course
  */
-Course.retrieve = async function (courseId){
+/*
+Course.retrieve = async function(courseId){
     const courseCollRef = db.collection("courses"),
           courseDocRef = courseCollRef.doc( courseId);
     let courseDocSnapshot = null;
@@ -114,7 +115,7 @@ Course.retrieve = async function (courseId){
     const courseRecord = courseDocSnapshot.data();
     return courseRecord;
 }
-
+*/
 /**
  *  Retrieve and list all courses
  */

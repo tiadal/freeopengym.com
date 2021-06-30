@@ -2,6 +2,7 @@
  Import classes, datatypes and utility procedures
  ***************************************************************/
 import Course from "../m/Course.mjs";
+import {fillSelectWithOptions} from "../../lib/util.mjs";
 
 /***************************************************************
  Load data
@@ -38,14 +39,63 @@ document.getElementById("retrieveAndListAll")
     tableBodyEl.innerHTML = "";  // drop old content
     const courseInstances = await Course.retrieveAll();
     console.log(courseInstances);
-    for (const key of Object.keys( courseInstances/*Course.instances*/)) {
+    for (const key of Object.keys( courseInstances)) {
         const course = courseInstances[key];
         const row = tableBodyEl.insertRow();
         row.insertCell().textContent = course.courseId;
         row.insertCell().textContent = course.courseName;
         row.insertCell().textContent = course.categories;
         row.insertCell().textContent = course.price;
+
+        document.querySelectorAll('#courseTable td')
+            .forEach(e => e.addEventListener("click", function() {
+                document.getElementById("Course-M").style.display = "none";
+                document.getElementById("Course-R").style.display = "none";
+                document.getElementById("Course-RO").style.display = "block";
+                const retrieveOneFormEl = document.querySelector("section#Course-RO > form");
+                //retrieveOneFormEl.innerHTML = "";  // drop old content
+
+                retrieveOneFormEl.courseId.value = course.courseId;
+                retrieveOneFormEl.courseName.value = course.courseName;
+                retrieveOneFormEl.categories.value = course.categories;
+                retrieveOneFormEl.price.value = course.price;
+                retrieveOneFormEl.description.value = course.description;
+
+                const backToCourses =
+                    document.getElementById("back-to-courses").addEventListener("click", refreshCourses);
+
+            }));
     }
+});
+
+/**********************************************
+ Show Details of a chosen Course
+ **********************************************/
+document.getElementById("retrieveOne")
+    .addEventListener("click", async function () {
+    let courseId = 1;
+
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-R").style.display = "none";
+    document.getElementById("Course-RO").style.display = "block";
+    const retrieveOneFormEl = document.querySelector("section#Course-RO > form");
+    //retrieveOneFormEl.innerHTML = "";  // drop old content
+
+    const courseInstances = await Course.retrieveAll();
+    console.log(courseInstances);
+    console.log(courseId);
+    const course = courseInstances[courseId];
+    console.log(course);
+
+    retrieveOneFormEl.courseId.value = course.courseId;
+    retrieveOneFormEl.courseName.value = course.courseName;
+    retrieveOneFormEl.categories.value = course.categories;
+    retrieveOneFormEl.price.value = course.price;
+    retrieveOneFormEl.description.value = course.description;
+
+    const backToCourses =
+        document.getElementById("back-to-courses").addEventListener("click", refreshCourses);
+
 });
 
 /**********************************************
@@ -71,12 +121,23 @@ createFormEl["commit"].addEventListener("click", async function () {
 });
 
 /**********************************************
+ * Refresh the courses site
+ **********************************************/
+function refreshCourses() {
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-R").style.display = "block";
+    document.getElementById("Course-RO").style.display = "none";
+    document.getElementById("Course-C").style.display = "none";
+}
+
+/**********************************************
  * Refresh the Manage Courses Data UI
  **********************************************/
 function refreshManageDataUI() {
     // show the manage course UI and hide the other UIs
     document.getElementById("Course-M").style.display = "block";
     document.getElementById("Course-R").style.display = "none";
+    document.getElementById("Course-RO").style.display = "none";
     document.getElementById("Course-C").style.display = "none";
 //    document.getElementById("Course-U").style.display = "none";
 //    document.getElementById("Course-D").style.display = "none";
