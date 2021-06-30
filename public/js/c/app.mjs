@@ -5,7 +5,7 @@ import Course from "../m/Course.mjs";
  */
 //TODO generate data
 async function generateTestData() {
-    console.log(`Nice try, but there's no test to be generated.`);
+    console.log(`Generating Testdata...`);
     try{
       let courseInstances = [
         {

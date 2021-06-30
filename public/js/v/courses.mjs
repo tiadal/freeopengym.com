@@ -38,7 +38,6 @@ document.getElementById("retrieveAndListAll")
     const tableBodyEl = document.querySelector("section#Course-R>table>tbody");
     tableBodyEl.innerHTML = "";  // drop old content
     const courseInstances = await Course.retrieveAll();
-    console.log(courseInstances);
     for (const key of Object.keys( courseInstances)) {
         const course = courseInstances[key];
         const row = tableBodyEl.insertRow();
@@ -82,10 +81,10 @@ document.getElementById("retrieveOne")
     //retrieveOneFormEl.innerHTML = "";  // drop old content
 
     const courseInstances = await Course.retrieveAll();
-    console.log(courseInstances);
-    console.log(courseId);
+    //console.log(courseInstances);
+    //console.log(courseId);
     const course = courseInstances[courseId];
-    console.log(course);
+    //console.log(course);
 
     retrieveOneFormEl.courseId.value = course.courseId;
     retrieveOneFormEl.courseName.value = course.courseName;
@@ -124,8 +123,12 @@ createFormEl["commit"].addEventListener("click", async function () {
  Use case Update Course
  **********************************************/
 const updateFormEl = document.querySelector("section#Course-U > form");
-console.log(document);
+const updSelCourseEl = updateFormEl.selectCourse;
+const courseInstances = await Course.retrieveAll();
 document.getElementById("update").addEventListener("click",async function () {
+  updSelCourseEl.innerHTML = "";
+  fillSelectWithOptions( updSelCourseEl, courseInstances,
+      "courseId", {displayProp:"courseName"});
     document.getElementById("Course-M").style.display = "none";
     document.getElementById("Course-U").style.display = "block";
     updateFormEl.reset();
