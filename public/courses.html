@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Freeopengym: Manage Courses</title>
 
+
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
     <!-- update the version number as needed -->
     <!--<script defer src="/__/firebase/8.6.8/firebase-app.js"></script>-->
     <!-- include only the Firebase features as you need -->
@@ -27,13 +30,19 @@
   </head>
   <body>
   <header>
-      <h1>Freeopengym</h1>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <figure><img src="favicon.ico" alt="Logo"></figure>
+        <h1>Freeopengym</h1>
+        <h2>Here you can manage your courses <h2>
+      </div>
+    </div>
   </header>
   <main>
+    <div class="wrapper clearfix">
     <!-- ======================================================= -->
     <section id="Course-M" class="UI-Page">
       <!-- ======================================================= -->
-      <h1>Manage course data</h1>
       <ul class="menu">
         <li>
           <button type="button" id="retrieveAndListAll">
@@ -57,7 +66,7 @@
         </li>
         <!--TODO update and delete -->
       </ul>
-      <div class="button"><a href="index.html">Back to Main menu</a></div>
+      <div class="button"><a href="index.html"><button type = "button">Back to Main menu</button></a></div>
     </section>
     <!-- ======================================================= -->
     <section id="Course-R" class="UI-Page">
@@ -95,7 +104,7 @@
           <label>Categories: <output type="text" name="categories"></output></label>
         </div>
         <div class="field">
-          <label>Price: <output type="text" name="price"></output></label>
+          <label>Price in $: <output type="text" name="price"></output></label>
         </div>
         <div class="field">
           <label>Description: <output type="text" name="description"></output></label>
@@ -127,7 +136,7 @@
                 <label>Categories: <input type="text" name="categories"></label>
             </div>
             <div class="field">
-                <label>Price: <input type="text" name="price"></label>
+                <label>Price in $: <input type="text" name="price"></label>
             </div>
             <div class="field">
                 <label>Description:
@@ -158,13 +167,13 @@
                 <label>Name: <input type="text" name="courseName"/></label>
             </div>
             <div class="field">
-                <label>category: <input type="text" name="courseCategory"/></label>
+                <label>Category: <input type="text" name="courseCategory"/></label>
             </div>
             <div class="field">
-                <label>price: <input type="text" name="coursePrice"/></label>
+                <label>Price in $: <input type="text" name="coursePrice"/></label>
             </div>
             <div class="field">
-                <label>description: <input type="text" name="courseDescription"/></label>
+                <label>Description: <input type="text" name="courseDescription"/></label>
             </div>
             <div class="button-group">
                 <button type="submit" name="commit">Save</button>
@@ -186,6 +195,7 @@
             </div>
         </form>
     </section>
+  </div>
   </main>
   </body>
 </html>

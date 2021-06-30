@@ -12,6 +12,10 @@ import {fillSelectWithOptions} from "../../lib/util.mjs";
 /***************************************************************
  Set up general, use-case-independent UI elements
  ***************************************************************/
+
+// Set up Manage Course UI
+refreshManageDataUI();
+
 // set up back-to-menu buttons for all CRUD UIs
 for (const btn of document.querySelectorAll("button.back-to-menu")) {
     btn.addEventListener("click", refreshManageDataUI);
@@ -203,6 +207,3 @@ async function handleCourseSelectChangeEvent() {
         saveButton.disabled = true;
     }
 }
-
-// Set up Manage Course UI
-refreshManageDataUI();
