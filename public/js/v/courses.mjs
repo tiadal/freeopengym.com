@@ -84,7 +84,7 @@ document.getElementById("create").addEventListener("click",async function () {
 // handle Save button click events
 createFormEl["commit"].addEventListener("click", async function () {
     const slots = {
-        courseId: createFormEl.courseId.value,
+        courseId: parseInt(createFormEl.courseId.value),
         courseName: createFormEl.courseName.value,
         categories: createFormEl.categories.value,
         price: createFormEl.price.value,
@@ -98,8 +98,8 @@ createFormEl["commit"].addEventListener("click", async function () {
  **********************************************/
 const updateFormEl = document.querySelector("section#Course-U > form");
 const updSelCourseEl = updateFormEl.selectCourse;
-const courseInstances = await Course.retrieveAll();
 document.getElementById("update").addEventListener("click",async function () {
+  const courseInstances = await Course.retrieveAll();
   updSelCourseEl.innerHTML = "";
   fillSelectWithOptions( updSelCourseEl, courseInstances,
       "courseId", {displayProp:"courseName"});
@@ -186,8 +186,8 @@ async function handleCourseSelectChangeEvent() {
         saveButton = updateFormEl.commit,
         selectUpdateAgentEl = updateFormEl.selectAgent;
     const courseInstances = await Course.retrieveAll();
-    console.log(courseInstances);
     const key = (parseInt(updSelCourseEl.value) - 1).toString();
+    console.log(courseInstances);
     if(key) {
         const course = courseInstances[key];
         console.log(typeof(key));

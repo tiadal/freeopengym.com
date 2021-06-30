@@ -74,7 +74,7 @@ class Course {
  */
 Course.add = async function (slots){
     const courseCollRef = db.collection("courses"),
-          courseDocRef = courseCollRef.doc( slots.courseId);
+          courseDocRef = courseCollRef.doc( slots.courseId.toString());
     try {
         await courseDocRef.set(slots);
     } catch (e) {
