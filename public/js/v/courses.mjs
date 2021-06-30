@@ -32,7 +32,7 @@ window.addEventListener("beforeunload", Course.saveAll);
  **********************************************/
 document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
-
+    let index = 1;
     document.getElementById("Course-M").style.display = "none";
     document.getElementById("Course-R").style.display = "block";
     const tableBodyEl = document.querySelector("section#Course-R>table>tbody");
@@ -46,55 +46,25 @@ document.getElementById("retrieveAndListAll")
         row.insertCell().textContent = course.categories;
         row.insertCell().textContent = course.price;
 
-        document.querySelectorAll('#courseTable td')
-            .forEach(e => e.addEventListener("click", function() {
-                document.getElementById("Course-M").style.display = "none";
-                document.getElementById("Course-R").style.display = "none";
-                document.getElementById("Course-RO").style.display = "block";
-                const retrieveOneFormEl = document.querySelector("section#Course-RO > form");
-                //retrieveOneFormEl.innerHTML = "";  // drop old content
+        document.getElementById("courseTable").rows[index].addEventListener("click", function() {
+            document.getElementById("Course-M").style.display = "none";
+            document.getElementById("Course-R").style.display = "none";
+            document.getElementById("Course-RO").style.display = "block";
+            const retrieveOneFormEl = document.querySelector("section#Course-RO > form");
+            //retrieveOneFormEl.innerHTML = "";  // drop old content
 
-                retrieveOneFormEl.courseId.value = course.courseId;
-                retrieveOneFormEl.courseName.value = course.courseName;
-                retrieveOneFormEl.categories.value = course.categories;
-                retrieveOneFormEl.price.value = course.price;
-                retrieveOneFormEl.description.value = course.description;
+            retrieveOneFormEl.courseId.value = course.courseId;
+            retrieveOneFormEl.courseName.value = course.courseName;
+            retrieveOneFormEl.categories.value = course.categories;
+            retrieveOneFormEl.price.value = course.price;
+            retrieveOneFormEl.description.value = course.description;
 
-                const backToCourses =
-                    document.getElementById("back-to-courses").addEventListener("click", refreshCourses);
+            const backToCourses =
+                document.getElementById("back-to-courses").addEventListener("click", refreshCourses);
 
-            }));
+        });
+        index++;
     }
-});
-
-/**********************************************
- Show Details of a chosen Course
- **********************************************/
-document.getElementById("retrieveOne")
-    .addEventListener("click", async function () {
-    let courseId = 1;
-
-    document.getElementById("Course-M").style.display = "none";
-    document.getElementById("Course-R").style.display = "none";
-    document.getElementById("Course-RO").style.display = "block";
-    const retrieveOneFormEl = document.querySelector("section#Course-RO > form");
-    //retrieveOneFormEl.innerHTML = "";  // drop old content
-
-    const courseInstances = await Course.retrieveAll();
-    //console.log(courseInstances);
-    //console.log(courseId);
-    const course = courseInstances[courseId];
-    //console.log(course);
-
-    retrieveOneFormEl.courseId.value = course.courseId;
-    retrieveOneFormEl.courseName.value = course.courseName;
-    retrieveOneFormEl.categories.value = course.categories;
-    retrieveOneFormEl.price.value = course.price;
-    retrieveOneFormEl.description.value = course.description;
-
-    const backToCourses =
-        document.getElementById("back-to-courses").addEventListener("click", refreshCourses);
-
 });
 
 /**********************************************
