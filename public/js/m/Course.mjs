@@ -98,6 +98,20 @@ Course.destroy = async function (courseId){
  *  Update a course
  */
 
+ Course.update = async function({courseId, courseName, categories, price, description}){
+   const courseCollRef = db.collection("courses"),
+         courseDocRef = courseCollRef.doc( courseId);
+   try {
+     // Merge existing data with updated data
+     await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
+   } catch (e) {
+       console.error(`Error when updating course record: ${e}`);
+       return;
+   }
+   console.log(`Course record ${courseId} updated`);
+
+ }
+
 /**
  *  Retrieve a concrete course
  */

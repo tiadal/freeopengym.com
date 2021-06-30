@@ -116,7 +116,7 @@ createFormEl["commit"].addEventListener("click", async function () {
         price: createFormEl.price.value,
         description: createFormEl.description.value
     };
-    //await Course.add( slots);
+    await Course.add( slots);
 });
 
 /**********************************************
@@ -134,6 +134,9 @@ document.getElementById("update").addEventListener("click",async function () {
     updateFormEl.reset();
 });
 
+// handle change events on course select element
+updSelCourseEl.addEventListener("change", await handleCourseSelectChangeEvent);
+
 // handle Save button click events
 updateFormEl["commit"].addEventListener("click", async function () {
     const slots = {
@@ -143,7 +146,38 @@ updateFormEl["commit"].addEventListener("click", async function () {
         price: updateFormEl.coursePrice.value,
         description: updateFormEl.courseDescription.value
     };
-    await Course.add( slots);
+    await Course.update( slots);
+});
+
+
+/**********************************************
+ * Use case Delete Course
+ **********************************************/
+ const deleteFormEl = document.querySelector("section#Course-D > form");
+//----- set up event handler for Update button -------------------------
+document.getElementById("delete").addEventListener("click", async function () {
+  const delSelCourseEl = deleteFormEl.selectCourse;
+  const courseInstances = await Course.retrieveAll();
+  console.log(courseInstances);
+    // reset selection list (drop its previous contents)
+    delSelCourseEl.innerHTML = "";
+    // populate the selection list
+    fillSelectWithOptions( delSelCourseEl, courseInstances,
+        "courseId", {displayProp:"courseName"});
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-D").style.display = "block";
+    deleteFormEl.reset();
+});
+// handle Delete button click events
+deleteFormEl["commit"].addEventListener("click", async function () {
+    const delSelCourseEl = deleteFormEl.selectCourse;
+    const courseId = delSelCourseEl.value;
+    let index = delSelCourseEl.selectedIndex;
+    if (!courseId) return;
+    if (confirm("Do you really want to delete this course?")) {
+        await Course.destroy(courseId);
+        delSelCourseEl.remove(index);
+    }
 });
 
 /**********************************************
@@ -166,7 +200,38 @@ function refreshManageDataUI() {
     document.getElementById("Course-RO").style.display = "none";
     document.getElementById("Course-C").style.display = "none";
     document.getElementById("Course-U").style.display = "none";
-//    document.getElementById("Course-D").style.display = "none";
+    document.getElementById("Course-D").style.display = "none";
+}
+
+/**
+ * handle course selection events
+ * when a course is selected, populate the form with the data of the selected course
+ */
+async function handleCourseSelectChangeEvent() {
+    const updateFormEl = document.querySelector("section#Course-U > form"),
+        saveButton = updateFormEl.commit,
+        selectUpdateAgentEl = updateFormEl.selectAgent;
+    const courseInstances = await Course.retrieveAll();
+    console.log(courseInstances);
+    const key = (parseInt(updSelCourseEl.value) - 1).toString();
+    if(key) {
+        const course = courseInstances[key];
+        console.log(typeof(key));
+        console.log(key);
+        console.log(course);
+        console.log(updateFormEl);
+        console.log(course.categories);
+        updateFormEl.courseId.value = course.courseId;
+        updateFormEl.courseName.value = course.courseName;
+        updateFormEl.courseCategory.value = course.categories;
+        updateFormEl.coursePrice.value = course.price;
+        updateFormEl.courseDescription.value = course.description;
+
+        saveButton.disabled = false;
+    } else {
+        updateFormEl.reset();
+        saveButton.disabled = true;
+    }
 }
 
 // Set up Manage Course UI
