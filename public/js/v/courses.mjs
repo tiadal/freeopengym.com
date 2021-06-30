@@ -67,6 +67,29 @@ createFormEl["commit"].addEventListener("click", async function () {
         price: createFormEl.price.value,
         description: createFormEl.description.value
     };
+    //await Course.add( slots);
+});
+
+/**********************************************
+ Use case Update Course
+ **********************************************/
+const updateFormEl = document.querySelector("section#Course-U > form");
+console.log(document);
+document.getElementById("update").addEventListener("click",async function () {
+    document.getElementById("Course-M").style.display = "none";
+    document.getElementById("Course-U").style.display = "block";
+    updateFormEl.reset();
+});
+
+// handle Save button click events
+updateFormEl["commit"].addEventListener("click", async function () {
+    const slots = {
+        courseId: updateFormEl.courseId.value,
+        courseName: updateFormEl.courseName.value,
+        categories: updateFormEl.courseCategory.value,
+        price: updateFormEl.coursePrice.value,
+        description: updateFormEl.courseDescription.value
+    };
     await Course.add( slots);
 });
 
@@ -78,7 +101,7 @@ function refreshManageDataUI() {
     document.getElementById("Course-M").style.display = "block";
     document.getElementById("Course-R").style.display = "none";
     document.getElementById("Course-C").style.display = "none";
-//    document.getElementById("Course-U").style.display = "none";
+    document.getElementById("Course-U").style.display = "none";
 //    document.getElementById("Course-D").style.display = "none";
 }
 

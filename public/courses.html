@@ -45,6 +45,11 @@
             Create a new course
           </button>
         </li>
+        <li>
+          <button type="button" id="update">
+            Update a course
+          </button>
+        </li>
         <!--TODO update and delete -->
       </ul>
       <div class="button"><a href="index.html">Back to Main menu</a></div>
@@ -97,6 +102,37 @@
                     <textarea id="description" name="description" rows="5" cols="40" placeholder="Enter the description here">
                     </textarea>
                 </label>
+            </div>
+            <div class="button-group">
+                <button type="submit" name="commit">Save</button>
+                <button type="button" class="back-to-menu">Back to menu</button>
+            </div>
+        </form>
+    </section>
+    <!-- ======================================================= -->
+    <section id="Course-U" class="UI-Page">
+        <!-- ======================================================= -->
+        <h1>Update a course record</h1>
+        <form>
+            <div class="select-one">
+                <label>Select course: <select name="selectCourse"></select></label>
+            </div>
+            <div class="field">
+                <label>ID:
+                    <output name="courseId"></output>
+                </label>
+            </div>
+            <div class="field">
+                <label>Name: <input type="text" name="courseName"/></label>
+            </div>
+            <div class="field">
+                <label>category: <input name="courseCategory/"></label>
+            </div>
+            <div class="field">
+                <label>price: <input name="coursePrice"/></label>
+            </div>
+            <div class="field">
+                <label>description: <input name="courseDescription"/></label>
             </div>
             <div class="button-group">
                 <button type="submit" name="commit">Save</button>
