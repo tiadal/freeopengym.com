@@ -56,7 +56,7 @@ async function clearData() {
         const courseRecords = await Course.retrieveAll();
         //delete all documents
         await Promise.all( courseRecords.map(
-            courseRec => db.collection("courses").doc( courseRec.courseId).delete()));
+            courseRec => db.collection("courses").doc( courseRec.courseId.toString()).delete()));
         //show confirmation
         console.log(`${Object.values( courseRecords).length} courses deleted`);
     }
