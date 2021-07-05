@@ -19,5 +19,7 @@ if (!firebase.apps.length) {
 }
 
 // create shortcut for accessing the apps's Firestore database
-const
-    db = firebase.firestore();
+const db = firebase.firestore();
+
+//initialize Firebase user authentication interface
+const auth = firebase.auth();

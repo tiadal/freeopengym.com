@@ -12,6 +12,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
 
     <script src = "js/c/initialize.mjs"></script>
     <script type = module>
@@ -32,10 +33,15 @@
         <h2>Find the perfect sport for you.</h2>
       </div>
     </div>
+    <div id="login-management">
+      <span hidden="hidden"><a href="authenticateUser.html">Sign in or Sign up</a></span>
+      <span hidden="hidden">Check your email for instructions to verify your account.</span>
+      <span hidden="hidden"><button type="button">Sign out</button></span>
+    </div>
   </header>
   <menu>
     <div class="wrapper clearfix">
-      <div class="two-col-menu">
+      <!--<div class="two-col-menu">
         <ul class="menu">
           This is a prototype of a user area.
           <li><a href = "courses.html"><button type = "button">Manage courses</button></a></li>
@@ -45,7 +51,24 @@
           <li><button type="button" id="testData">Generate test data</button></li>
           <li><button type="button" id="clearData">Clear database</button></li>
         </ul>
-      </div>
+      </div>-->
+      <p>
+        Welcome page! We're glad to see you here, bla bla bla... Think of this later.
+      </p>
+      <ul role="menubar">
+        <li role="menuitem">
+          <a href="courses.html" class="disabled">Manage courses</a>
+        </li>
+        <li role="menuitem">
+          <a href="anonymous.html">Something for not registered users</a>
+        </li>
+        <li role="menuitem">
+          <button type="button" id="testData" disabled="disabled">Generate test data</button>
+        </li>
+        <li role="menuitem">
+          <button type="button" id="clearData" disabled="disabled">Clear database</button>
+        </li>
+      </ul>
     </div>
   </menu>
     </script>
