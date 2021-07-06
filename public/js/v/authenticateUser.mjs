@@ -35,6 +35,14 @@ setupUiByUserStatus = function () {
           // set and event handler for 'sign out' button
           const signOutButton = loginManageEls[1].querySelector("button");
           signOutButton.addEventListener("click", handleLogOut);
+
+          // enable buttons
+          const manageCourseEl = document.getElementById("manageCourses");
+          const genTestDataEl = document.getElementById("testData");
+          const clearDataEl = document.getElementById("clearData");
+          manageCourseEl.classList.remove("disabled");
+          genTestDataEl.disabled = false;
+          clearDataEl.disabled = false;
           console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);
         }
 
