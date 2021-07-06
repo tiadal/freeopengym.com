@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
 
     <script src = "js/c/initialize.mjs"></script>
+    <script src = "js/v/authenticateUser.mjs"></script>
     <script type = module>
       import {clearData, generateTestData} from "./js/c/app.mjs";
       const clearButton = document.getElementById("clearData"),
@@ -35,8 +36,8 @@
     </div>
     <div id="login-management">
       <span hidden="hidden"><a href="authenticateUser.html">Sign in or Sign up</a></span>
-      <span hidden="hidden">Check your email for instructions to verify your account.</span>
       <span hidden="hidden"><button type="button">Sign out</button></span>
+      <span hidden="hidden">Check your email for instructions to verify your account.</span>
     </div>
   </header>
   <menu>

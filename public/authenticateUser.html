@@ -15,7 +15,7 @@
 
     <script src="js/c/initialize.mjs"></script>
     <script src="js/v/authenticateUser.mjs"></script>
-    <script>
+    <!--<script>
       //evaluate user authentication status
       auth.onAuthStateChanged( function (user){
         if (!user) { //if user status is uknown
@@ -24,20 +24,22 @@
         }
       });
       window.addEventListener("load", authenticateUser.setupSigninAndSignup);
-    </script>
+    </script>-->
   </head>
   <body>
-    <form id="User">
-      <div>
-        <label>Email: <input name="email" type="email"/></label>
-      </div>
-      <div>
-        <label>Password: <input name="password" placeholder="6+ characters"/></label>
-      </div>
-      <div>
-        <button type="button" name="signin">Sign in</button>
-        <button type="button" name="signup">Sing up</button>
-      </div>
-    </form>
+    <header>
+      <form id="User">
+        <div>
+          <label>Email: <input name="email" type="email"/></label>
+        </div>
+        <div>
+          <label>Password: <input name="password" placeholder="6+ characters"/></label>
+        </div>
+        <div>
+          <button type="button" name="signin">Sign in</button>
+          <button type="button" name="signup">Sing up</button>
+        </div>
+      </form>
+    </header>
   </body>
 </html>
