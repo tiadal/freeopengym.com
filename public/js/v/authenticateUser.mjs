@@ -31,12 +31,13 @@ setupUiByUserStatus = function () {
         if(webPage === "/index.html" || webPage === "/"){
           loginManageEls[0].hidden = true;
           loginManageEls[1].hidden = false;
+
+          // set and event handler for 'sign out' button
+          const signOutButton = loginManageEls[1].querySelector("button");
+          signOutButton.addEventListener("click", handleLogOut);
+          console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);
         }
 
-        // set and event handler for 'sign out' button
-        const signOutButton = loginManageEls[1].querySelector("button");
-        signOutButton.addEventListener("click", handleLogOut);
-        console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);
 
       }
     } else { // if user is not 'registered' nor 'anonymous' (null)
