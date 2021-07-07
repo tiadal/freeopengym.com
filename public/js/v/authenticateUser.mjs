@@ -8,30 +8,33 @@ setupUiByUserStatus = function () {
     "/index.html",
     "/authenticateUser.html"
   ]
-  console.log(webPage);
-  console.log(loginManageEls);
-  console.log(allowedPages);
 
-  console.log("do smth");
+  console.log(webPage);
   //evaluate user authentication status
   auth.onAuthStateChanged( async function (user) {
     // if status is 'anonymous' or 'registered'
-    console.log("maybe");
     if (user) {
-      console.log(user);
       if (user.isAnonymous) { // if user is 'anonymous'
         console.log("logged in anonymously");
         // TODO anonymous user handling
         if(webPage === "/index.html" || webPage === "/"){
-          loginManageEls[0].hidden = loginManageEls[1].hidden = false;
-        }
+          loginManageEls[0].hidden = false;
+          loginManageEls[1].hidden = true;
+        } else if (!allowedPages.includes( webPage)) {
+            // redirect to authentication page
+            window.location.pathname = "/authenticateUser.html";
+          }
       } else { // if user is 'registered'
         console.log("registered");
         // TODO registered user handling
         if(webPage === "/index.html" || webPage === "/"){
           loginManageEls[0].hidden = true;
           loginManageEls[1].hidden = false;
-
+          if(!user.emailVerified){
+            loginManageEls[2].hidden = false;
+          } else {
+            loginManageEls[2].hidden = true;
+          }
           // set and event handler for 'sign out' button
           const signOutButton = loginManageEls[1].querySelector("button");
           signOutButton.addEventListener("click", handleLogOut);
@@ -107,6 +110,7 @@ handleSignInButton = async function (){
   const formEl = document.forms["User"],
       email = formEl.email.value,
       password = formEl.password.value;
+
   if (email && password) {
     try {
       const signIn = await auth.signInWithEmailAndPassword( email, password);
@@ -127,16 +131,41 @@ handleSignInButton = async function (){
   }
 }
 
-handleVerifyEmail = function(){
+handleVerifyEmail = async function(){
   // TODO
+  const urlParams = new URLSearchParams( location.search);
+  const verificationCode = urlParams.get( "oobCode"); // get verification code from URL
+      //h1El = document.querySelector("main > h1"),
+      //pEl = document.querySelector("main > p"),
+      //linkEl = document.querySelector("footer > a");
+    try { // if email can be verified
+      // apply the email verification code
+      await auth.applyActionCode( verificationCode);
+      console.log("i am here");
+      // if success, manipulate HTML elements: message, instructions and link
+      //h1El.textContent = "Your email has been verified.";
+      //pEl.textContent = "You can use now any operation on the Minimal App.";
+      //let textNodeEl = document.createTextNode("« Go to Minimal App");
+      //linkEl.appendChild( textNodeEl);
+      //linkEl.href = "index.html";
+    } catch (e) { // if email has been already verified
+      // if error, manipulate HTML elements: message, instructions and link
+      //h1El.textContent = "Your validation link has been already used.";
+      //pEl.textContent = "You can Sign In now the JS + Firebase Minimal App with Auth.";
+      //let textNodeEl = document.createTextNode("« Go to the Sign in page");
+      //linkEl.appendChild( textNodeEl);
+      //linkEl.href = "authenticateUser.html";
+      console.error( e.message);
+    }
   console.log("NYI");
-  return true;
 }
 
 handleLogOut = function(){
+  const signoutEl = document.querySelectorAll("header > #login-management >span")[2];
   try {
     auth.signOut();
     window.location.pathname = "/index.html";
+    //signoutEl.hidden = true;
     console.log("You have signed out");
   } catch (e) {
     console.error( e.message);
