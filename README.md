@@ -115,5 +115,18 @@ Interactions:
 ![Class_Model](./freeopengym_class_modelv2.png)
   
 ### Division of Work
-puchala-mag: Course, Class  
-Rudolchr: User
+7C-1
+puchala-mag: Course: Retrieve and create
+Rudolchr: Course: Update and delete
+  
+7C-2
+puchala-mag:
+    Redirection to Sign in/up page
+   	Implementation of Sign out
+   	Implementation of 404 page
+    html&css files
+Rudolchr: 
+   	Implementation of user authentication status
+    Implementation of enable/disable UI elements in start page
+   	Email verification with customised page 
+ 
