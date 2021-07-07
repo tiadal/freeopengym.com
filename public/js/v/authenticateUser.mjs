@@ -43,7 +43,7 @@ setupUiByUserStatus = function () {
           const manageCourseEl = document.getElementById("manageCourses");
           const genTestDataEl = document.getElementById("testData");
           const clearDataEl = document.getElementById("clearData");
-          manageCourseEl.classList.remove("disabled");
+          manageCourseEl.disabled = false;
           genTestDataEl.disabled = false;
           clearDataEl.disabled = false;
           console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);
@@ -75,14 +75,12 @@ setupUiByUserStatus = function () {
       }
     } else { // if user is not 'registered' nor 'anonymous' (null)
       // sign in user as 'anonymous'
-      console.log("hier");
       auth.signInAnonymously();
     }
   });
 }
 
 setupSignInAndSignUp = function(){
-  console.log("Just work");
   if(window.location.pathname === "/authenticateUser.html") {
     const formEl = document.forms["User"],
         btnSignIn = formEl.signin,

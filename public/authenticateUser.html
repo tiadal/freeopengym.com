@@ -26,20 +26,38 @@
       window.addEventListener("load", authenticateUser.setupSigninAndSignup);
     </script>-->
   </head>
+  <header>
+    <div id="login-management" class="login-management">
+      <span hidden="hidden">
+        <button  class="log-buttons" type="button" onclick="location.href='authenticateUser.html'">
+          Sign in or Sign up
+        </button>
+      </span>
+      <span hidden="hidden"><button type="button" class="log-buttons">Sign out</button></span>
+      <span hidden="hidden">Check your email for instructions to verify your account.</span>
+    </div>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <figure><img src="favicon.ico" alt="Logo"></figure>
+        <h1>Welcome to Freeopengym!</h1>
+        <h2>Sign in or sign up!</h2>
+      </div>
+    </div>
+  </header>
   <body>
-    <header>
+    <div class="login-form">
       <form id="User">
         <div>
           <label>Email: <input name="email" type="email"/></label>
         </div>
         <div>
-          <label>Password: <input name="password" placeholder="6+ characters"/></label>
+          <label>Password: <input name="password" type="password"/></label>
         </div>
         <div>
           <button type="button" id="signin">Sign in</button>
           <button type="button" id="signup">Sign up</button>
         </div>
       </form>
-    </header>
+    </div>
   </body>
 </html>

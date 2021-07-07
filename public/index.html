@@ -27,6 +27,15 @@
   </head>
   <body>
   <header>
+    <div id="login-management" class="login-management">
+      <span hidden="hidden">
+        <button  class="log-buttons" type="button" onclick="location.href='authenticateUser.html'">
+          Sign in or Sign up
+        </button>
+      </span>
+      <span hidden="hidden"><button type="button" class="log-buttons">Sign out</button></span>
+      <span hidden="hidden">Check your email for instructions to verify your account.</span>
+    </div>
     <div class="wrapper clearfix">
       <div class="title">
         <figure><img src="favicon.ico" alt="Logo"></figure>
@@ -34,40 +43,32 @@
         <h2>Find the perfect sport for you.</h2>
       </div>
     </div>
-    <div id="login-management">
-      <span hidden="hidden"><a href="authenticateUser.html">Sign in or Sign up</a></span>
-      <span hidden="hidden"><button type="button">Sign out</button></span>
-      <span hidden="hidden">Check your email for instructions to verify your account.</span>
-    </div>
   </header>
   <menu>
     <div class="wrapper clearfix">
-      <!--<div class="two-col-menu">
-        <ul class="menu">
-          This is a prototype of a user area.
-          <li><a href = "courses.html"><button type = "button">Manage courses</button></a></li>
-        </ul>
-        <ul class="menu">
-          This is a test area for developers.
-          <li><button type="button" id="testData">Generate test data</button></li>
-          <li><button type="button" id="clearData">Clear database</button></li>
-        </ul>
-      </div>-->
-      <p>
-        Welcome page! We're glad to see you here, bla bla bla... Think of this later.
-      </p>
-      <ul role="menubar">
+      <ul role="menubar" class="no-bullets">
+        <p>
+          Welcome to freeopengym! We are glad to see you here. Sign in or sign up to use all features of the app.
+        </p>
         <li role="menuitem">
-          <a href="courses.html" class="disabled" id="manageCourses">Manage courses</a>
+          <a href="anonymous.html">
+            <button type = "button" class="menu-button">Why should you join?</button>
+          </a>
         </li>
         <li role="menuitem">
-          <a href="anonymous.html">Something for not registered users</a>
+          <a href = "courses.html">
+            <button type = "button" id="manageCourses" disabled="disabled" class="menu-button">
+              Manage courses
+            </button>
+          </a>
+        </li>
+        <br>
+        <p>Test space for developers</p>
+        <li role="menuitem">
+          <button type="button" id="testData" disabled="disabled" class="menu-button">Generate test data</button>
         </li>
         <li role="menuitem">
-          <button type="button" id="testData" disabled="disabled">Generate test data</button>
-        </li>
-        <li role="menuitem">
-          <button type="button" id="clearData" disabled="disabled">Clear database</button>
+          <button type="button" id="clearData" disabled="disabled" class="menu-button">Clear database</button>
         </li>
       </ul>
     </div>

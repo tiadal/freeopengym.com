@@ -58,18 +58,20 @@ body {
     margin: 0 5%;
 }
 
+
+
 /* ===================
     ALL: Theme
-   =================== */
+   =================== *//*
 :root {  /* pseudo-class used for variable definitions */
  /*   --light-bg-color: goldenrod;      #f16529
     --dark-bg-color: darkgoldenrod;   #e44d26
-    */
+
     --light-bg-color: #BCD4F5;
     --dark-bg-color: #6199F0
- /* --light-bg-color: forestgreen;
+  --light-bg-color: forestgreen;
     --dark-bg-color: darkgreen;
-  */
+
 }
 
 header {
@@ -84,12 +86,20 @@ header,
 footer {
     background: var(--light-bg-color);
 }
-header .title {
-    text-align: center;
-}
+
+*/
+
 /*header .title {
     color: white;
 }*/
+
+header {
+    background-image: linear-gradient(to bottom left, #DEB0DF, #a725c8);
+}
+
+header .title {
+    margin-left: 25%;
+}
 
 /* ==============
     MOBILE: Menu
@@ -108,7 +118,7 @@ nav a {
     text-decoration: none;
     font-weight: bold;
     color: white;
-    background: var(--dark-bg-color);
+    /*background: var(--dark-bg-color);*/
 }
 nav a:hover,
 nav a:visited {
@@ -151,22 +161,21 @@ table, td, th {
     padding: 5px;
 }
 table th {
-    background: aliceblue;
+    background-image: linear-gradient(to bottom left, #DEB0DF, #a725c8);
 }
 
 table td {
     cursor: pointer;
-    background: #FEF9EA;
+    background-image: linear-gradient(to bottom left, #faf4b1, #f1e555);
 }
 
 ul.menu {
     width: 20em;
     text-align: center;
-    border: 1px solid black;
     padding: 8px;
-    border-radius: 5px;
-    background: aliceblue;
+    margin-left: 35%;
 }
+
 div.two-col-menu ul.menu {
     display: inline-block;
     vertical-align: top;
@@ -302,6 +311,8 @@ form div.MultiChoiceWidget > ul > li.added {
    ==================== */
    header {
        box-shadow: 0 5px 10px #aaa;
+       border-bottom-left-radius: 25px;
+       border-bottom-right-radius: 25px;
    }
 /* ============
    WIDE: header
@@ -317,6 +328,10 @@ form div.MultiChoiceWidget > ul > li.added {
    header .title {
        width: 57%;
        float: left;
+   }
+   header .login-management {
+       float: bottom;
+       float: right;
    }
    nav {
        float: right;
@@ -445,12 +460,83 @@ form div.MultiChoiceWidget > ul > li.added {
 /*
 Own changes
 */
-body {
-    background-color: #FEFAEF;
-}
 
 a.disabled {
     opacity: 0.4;
     pointer-events: none;
     cursor: default;
+}
+
+button {
+    cursor: pointer;
+    background-image: linear-gradient(to bottom left, #fff7cf, #ffd914);
+    border-radius: 8px;
+    border-color: #ffd914;
+    padding: 16px 32px;
+}
+
+.log-buttons {
+    margin: -10%;
+}
+
+button {
+    padding: 4px 8px;
+}
+
+button:disabled {
+    cursor: default;
+    background-image: linear-gradient(to bottom left, #F0F0F0, #989898);
+    border-color: #989898;
+}
+
+ul.no-bullets {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.menu-button {
+    width: 50%;
+    height: 50px;
+}
+
+.login-form {
+    border-style: double;
+    border-radius: 8px;
+    margin-left: 25%;
+    margin-top: 10%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    background-image: linear-gradient(to bottom left, #e6f67c, #b27cf6);
+}
+
+.anonymous-text {
+    border-style: double;
+    border-radius: 8px;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 5%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    background-image: linear-gradient(to bottom left, #e6f67c, #b27cf6);
+}
+
+#courseTable {
+    text-align: center;
+    margin-left: 40%;
+}
+
+.show-retrieve {
+    margin-left: 45%;
+}
+
+.retrieve-back {
+    margin-left: 50%;
+}
+
+.center-form {
+    margin-left: 50%;
 }

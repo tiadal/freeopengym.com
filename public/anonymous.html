@@ -4,18 +4,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
 
-    <title>Something for not registered users</title>
+    <title>Why should you join?</title>
 
     <script src="js/c/initialize.mjs"></script>
 
   </head>
+  <header>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <figure><img src="favicon.ico" alt="Logo"></figure>
+        <h1>Welcome to Freeopengym!</h1>
+        <h2>Sign in or sign up!</h2>
+      </div>
+    </div>
+  </header>
   <body>
-    <div id="message">
-      <h1>Something for not registered users</h1>
+    <div class="anonymous-text">
+      <p>
+        Freeopengym is a place, where you can search through sport courses to find a best one for you!
+        You can search your favourite sport or just look through all courses in your area.
+      </p>
+      <p>
+        You want to teach a sport? Just create an account and add a course you want to run.
+      </p>
+      <div class="button">
+        <a href = "index.html"><button type="button" class="back-to-menu">Back to menu</button></a>
+      </div>
     </div>
   </body>
 </html>

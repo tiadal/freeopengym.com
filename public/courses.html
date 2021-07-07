@@ -8,18 +8,6 @@
 
     <link rel="stylesheet" href="css/normalize.css"/>
     <link rel="stylesheet" href="css/main.css"/>
-    <!-- update the version number as needed -->
-    <!--<script defer src="/__/firebase/8.6.8/firebase-app.js"></script>-->
-    <!-- include only the Firebase features as you need -->
-    <!--<script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-functions.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-storage.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-analytics.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>-->
 
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
@@ -66,14 +54,14 @@
             Delete a course
           </button>
         </li>
-        <!--TODO update and delete -->
+        <br>
+        <div class="button"><a href="index.html"><button type = "button" id = "btm">Back to Main menu</button></a></div>
       </ul>
-      <div class="button"><a href="index.html"><button type = "button" id = "btm">Back to Main menu</button></a></div>
-    </section>
+      </section>
     <!-- ======================================================= -->
     <section id="Course-R" class="UI-Page">
       <!-- ======================================================= -->
-      <h1>Course details</h1>
+      <h1 class="show-retrieve">Course details</h1>
         <table id="courseTable">
           <thead>
             <tr>
@@ -85,8 +73,10 @@
           </thead>
           <tbody></tbody>
         </table>
-        <div class="button">
-            <button type="button" class="back-to-menu">Back to menu</button>
+        <div class="retrieve-back">
+            <div class="button">
+                <button type="button" class="back-to-menu">Back to menu</button>
+            </div>
         </div>
     </section>
     <!-- ==================retrieve one========================== -->
