@@ -1,5 +1,4 @@
 setupUiByUserStatus = function () {
-  // TODO Variablen
   const webPage = window.location.pathname;
   const loginManageEls = document.querySelectorAll("header > #login-management >span");
   const allowedPages =
@@ -9,14 +8,11 @@ setupUiByUserStatus = function () {
     "/authenticateUser.html"
   ]
 
-  console.log(webPage);
   //evaluate user authentication status
   auth.onAuthStateChanged( async function (user) {
     // if status is 'anonymous' or 'registered'
     if (user) {
       if (user.isAnonymous) { // if user is 'anonymous'
-        console.log("logged in anonymously");
-        // TODO anonymous user handling
         if(webPage === "/index.html" || webPage === "/"){
           loginManageEls[0].hidden = false;
           loginManageEls[1].hidden = true;
@@ -25,8 +21,6 @@ setupUiByUserStatus = function () {
             window.location.pathname = "/authenticateUser.html";
           }
       } else { // if user is 'registered'
-        console.log("registered");
-        // TODO registered user handling
         if(webPage === "/index.html" || webPage === "/"){
           loginManageEls[0].hidden = true;
           loginManageEls[1].hidden = false;
@@ -58,17 +52,11 @@ setupUiByUserStatus = function () {
 
           if(!user.emailVerified){
             for(const i in Object.keys(buttonEls)){
-              console.log(buttonEls[i]);
               if(!unverified_buttons.includes(buttonEls[i].id)){
                 buttonEls[i].disabled = true;
               }
             }
           }
-          //const createEl = buttonEls.querySelectorAll("button#create");
-          //const createEl = formEl.getElementById("create");
-          console.log(formEl);
-          console.log(buttonEls);
-          //console.log(createEl);
         }
 
 
@@ -113,13 +101,11 @@ handleSignUpButton = async function (){
       console.log (`User ${email} became 'Registered'`);
       alert (`Account created ${email}.\n\nCheck your email for instructions to verify this account.`);
       window.location.pathname = "/index.html";
-      console.log("Yay, you signed up!");
     } catch (e) {
       const divEl = document.getElementById("error"),
           smallEl = divEl.querySelector("small");
       smallEl.textContent = e.message;
       divEl.hidden = false;
-      console.log("Well, you are NOT signed up :(");
     }
   } else {
     console.log("There is no username or/and password.");
@@ -138,8 +124,6 @@ handleSignInButton = async function (){
         console.log(`Granted access to user ${email}`);
       }
       window.location.pathname = "/index.html";
-      console.log(window.location.pathname);
-      console.log("Hurra, you are logged in!");
     } catch (e) {
       const divEl = document.getElementById("error"),
           smallEl = divEl.querySelector("small");
@@ -152,32 +136,13 @@ handleSignInButton = async function (){
 }
 
 handleVerifyEmail = async function(){
-  // TODO
   const urlParams = new URLSearchParams( location.search);
   const verificationCode = urlParams.get( "oobCode"); // get verification code from URL
-      //h1El = document.querySelector("main > h1"),
-      //pEl = document.querySelector("main > p"),
-      //linkEl = document.querySelector("footer > a");
-    try { // if email can be verified
-      // apply the email verification code
+    try {
       await auth.applyActionCode( verificationCode);
-      console.log("i am here");
-      // if success, manipulate HTML elements: message, instructions and link
-      //h1El.textContent = "Your email has been verified.";
-      //pEl.textContent = "You can use now any operation on the Minimal App.";
-      //let textNodeEl = document.createTextNode("« Go to Minimal App");
-      //linkEl.appendChild( textNodeEl);
-      //linkEl.href = "index.html";
-    } catch (e) { // if email has been already verified
-      // if error, manipulate HTML elements: message, instructions and link
-      //h1El.textContent = "Your validation link has been already used.";
-      //pEl.textContent = "You can Sign In now the JS + Firebase Minimal App with Auth.";
-      //let textNodeEl = document.createTextNode("« Go to the Sign in page");
-      //linkEl.appendChild( textNodeEl);
-      //linkEl.href = "authenticateUser.html";
+    } catch (e) {
       console.error( e.message);
     }
-  console.log("NYI");
 }
 
 handleLogOut = function(){
@@ -185,8 +150,6 @@ handleLogOut = function(){
   try {
     auth.signOut();
     window.location.pathname = "/index.html";
-    //signoutEl.hidden = true;
-    console.log("You have signed out");
   } catch (e) {
     console.error( e.message);
   }
