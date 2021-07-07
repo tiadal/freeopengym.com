@@ -47,6 +47,28 @@ setupUiByUserStatus = function () {
           genTestDataEl.disabled = false;
           clearDataEl.disabled = false;
           console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);
+        } else if(webPage === "/courses.html"){
+          const formEl = document.getElementById("Course-M");
+          const buttonEls = formEl.querySelectorAll("button");
+          const unverified_buttons =
+          [
+            "retrieveAndListAll",
+            "btm"
+          ];
+
+          if(!user.emailVerified){
+            for(const i in Object.keys(buttonEls)){
+              console.log(buttonEls[i]);
+              if(!unverified_buttons.includes(buttonEls[i].id)){
+                buttonEls[i].disabled = true;
+              }
+            }
+          }
+          //const createEl = buttonEls.querySelectorAll("button#create");
+          //const createEl = formEl.getElementById("create");
+          console.log(formEl);
+          console.log(buttonEls);
+          //console.log(createEl);
         }
 
 
