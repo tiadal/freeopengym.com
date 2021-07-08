@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Freeopengym: Manage Classes</title>
+
+
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
+
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <script src = "js/c/initialize.mjs"></script>
+    <script src = "js/v/authenticateUser.mjs"></script>
+    <script src="js/v/classes.mjs" type="module"></script>
+</head>
+<body>
+    <header>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <figure><img src="favicon.ico" alt="Logo"></figure>
+                <h1>Freeopengym</h1>
+                <h2>Here you can manage your classes </h2>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper clearfix">
+            <!-- ======================================================= -->
+            <section id="Class-M" class="UI-Page">
+                <!-- ======================================================= -->
+                <ul class="menu">
+                    <li>
+                        <button type="button" id="retrieveAndListAll">
+                            List all classes
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="create">
+                            Create a new class
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="update">
+                            Update a class
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" id="delete">
+                            Delete a class
+                        </button>
+                    </li>
+                    <br>
+                    <div class="button"><a href="index.html"><button type = "button" id = "btm">Back to Main menu</button></a></div>
+                </ul>
+            </section>
+            <!-- ======================================================= -->
+            <section id="Class-R" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1 class="show-retrieve">Class details</h1>
+                <table id="classTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="retrieve-back">
+                    <div class="button">
+                        <button type="button" class="back-to-menu">Back to menu</button>
+                    </div>
+                </div>
+            </section>
+            <!-- ======================================================= -->
+            <section id="Class-C" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Create a new class</h1>
+                <form>
+                    <div class="field">
+                        <label>ID: <input type="text" name="classId"></label>
+                    </div>
+                    <div class="field">
+                        <label>Time: <input type="text" name="classTime"></label>
+                    </div>
+                    <div class="field">
+                        <label>Location: <input type="text" name="classLocation"></label>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" name="commit">Save</button>
+                        <button type="button" class="back-to-menu">Back to menu</button>
+                    </div>
+                </form>
+            </section>
+            <!-- ======================================================= -->
+            <section id="Class-U" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Update a class record</h1>
+                <form>
+                    <div class="select-one">
+                        <label>Select class: <select name="selectClass"></select></label>
+                    </div>
+                    <div class="field">
+                        <label>ID:
+                            <output name="classId"></output>
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>Time: <input type="text" name="classTime"/></label>
+                    </div>
+                    <div class="field">
+                        <label>Location: <input type="text" name="classLocation"/></label>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" name="commit">Save</button>
+                        <button type="button" class="back-to-menu">Back to menu</button>
+                    </div>
+                </form>
+            </section>
+            <!-- ======================================================= -->
+            <section id="Class-D" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Delete an class record</h1>
+                <form>
+                    <div class="select-one">
+                        <label>Select class: <select name="selectClass"></select></label>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" name="commit">Delete</button>
+                        <button type="button" class="back-to-menu">Back to menu</button>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </main>
+</body>
+</html>

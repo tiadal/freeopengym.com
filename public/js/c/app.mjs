@@ -1,11 +1,11 @@
 import Course from "../m/Course.mjs";
+import Class from "../m/Class.mjs";
 
 /**
  * Generate test data for testing
  */
 //TODO generate data
 async function generateTestData() {
-    console.log(`Generating Testdata...`);
     try{
       let courseInstances = [
         {
@@ -45,6 +45,40 @@ async function generateTestData() {
       console.log("Error: " + e);
     }
 
+    try{
+        let classInstances = [
+            {
+                classId: 1,
+                courseId: 1,
+                classTime: "Some random time",
+                classLocation: "Some dark alley."
+            },
+            {
+                classId: 2,
+                courseId: 2,
+                classTime: "Midnight",
+                classLocation: "Middle of the woods."
+            },
+            {
+                classId: 3,
+                courseId: 3,
+                classTime: "Neverever",
+                classLocation: "Neverland."
+            },
+            {
+                classId: 4,
+                courseId: 4,
+                classTime: "At noon",
+                classLocation: "In front of saloon."
+            },
+        ];
+        await Promise.all(classInstances.map(
+            classRec => db.collection("classes").doc(classRec.classId.toString()).set(classRec)
+        ));
+    } catch(e){
+        console.log("Error: " + e);
+    }
+    console.log(`Testdata have been generated.`);
 }
 
 /**
@@ -59,6 +93,14 @@ async function clearData() {
             courseRec => db.collection("courses").doc( courseRec.courseId.toString()).delete()));
         //show confirmation
         console.log(`${Object.values( courseRecords).length} courses deleted`);
+
+        //retrieve all class documents from Firestore
+        const classRecords = await Class.retrieveAll();
+        //delete all documents
+        await Promise.all( classRecords.map(
+            classRec => db.collection("classes").doc( classRec.classId.toString()).delete()));
+        //show confirmation
+        console.log(`${Object.values( classRecords).length} classes deleted`);
     }
 }
 

@@ -5,11 +5,6 @@ import Course from "../m/Course.mjs";
 import {fillSelectWithOptions} from "../../lib/util.mjs";
 
 /***************************************************************
- Load data
- ***************************************************************/
-//await Course.retrieveAll();
-
-/***************************************************************
  Set up general, use-case-independent UI elements
  ***************************************************************/
 

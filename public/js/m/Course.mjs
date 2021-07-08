@@ -6,7 +6,7 @@
  */
 
 class Course {
-    constructor({courseId, courseName, categories, price, description}) {
+    constructor({courseId, courseName, categories, price, description, availableClasses}) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.categories = categories;
@@ -14,6 +14,8 @@ class Course {
         if (description){
             this.description = description;
         }
+
+        this._availableClasses = {};
     }
     get courseId(){
         return this._courseId;
@@ -52,6 +54,9 @@ class Course {
     set description(description){
         this._description = description;
     }
+    get availableClasses(){
+        return this._availableClasses;
+    }
     // Serialize course object
     toString() {
         let courseStr = `Course{ ID: ${this._courseId}, Name: ${this._courseName}, Categories: ${this._categories},
@@ -59,12 +64,6 @@ class Course {
         return `${courseStr}`;
     }
 }
-
-/***********************************************
- *** Class-level ("static") properties **********
- ************************************************/
-// initially an empty collection (in the form of a map)
-//Course.instances = {};
 
 /********************************************************
  *** Class-level ("static") storage management methods ***
@@ -112,24 +111,6 @@ Course.destroy = async function (courseId){
 
  }
 
-/**
- *  Retrieve a concrete course
- */
-/*
-Course.retrieve = async function(courseId){
-    const courseCollRef = db.collection("courses"),
-          courseDocRef = courseCollRef.doc( courseId);
-    let courseDocSnapshot = null;
-    try {
-        courseDocSnapshot = await courseDocRef.get();
-    } catch (e) {
-        console.error(`Error when retrieving a course record with id ${courseId}: ${e}`)
-        return null;
-    }
-    const courseRecord = courseDocSnapshot.data();
-    return courseRecord;
-}
-*/
 /**
  *  Retrieve and list all courses
  */
