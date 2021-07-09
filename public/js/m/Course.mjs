@@ -1,5 +1,5 @@
 /**
- * Constructor function for the class Movie
+ * Constructor function for the class Course
  * @constructor
  * @param {{courseId: number, courseName: string, categories: enum, description: string, price: string}}
  * slots - Object creation slots.
