@@ -1,9 +1,6 @@
-import Class from "./Class.mjs";
-
 /**
- * Constructor function for the class Movie
+ * Constructor function for the class Time
  * @constructor
- * @param {{startTime: Date, endTime: Date}}
  * slots - Object creation slots.
  */
 
@@ -37,7 +34,7 @@ class Time {
 
     // Serialize course object
     toString() {
-        let timeStr = `{Start Time: ${this._startTime}, End Time: ${this._endTime}`;
+        let timeStr = `{Date: ${this._date}, Start Time: ${this._startTime}, End Time: ${this._endTime}`;
         return `${timeStr}`;
     }
 }

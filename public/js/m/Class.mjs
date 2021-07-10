@@ -1,7 +1,7 @@
 /**
 * Constructor function for the class Class
 * @constructor
-* @param {{classId: number, classTime: Time, classLocation: string}}
+* @param {{classId: number, courseId: number, classTime: Time, classLocation: string}}
 * slots - Object creation slots.
 */
 import {isIntegerOrIntegerString, isNonEmptyString} from "../../lib/util.mjs";
@@ -21,58 +21,11 @@ class Class {
     get classId(){
         return this._classId;
     }
-    static checkClassId( classId) {
-        // Check if Number
-        if(!isIntegerOrIntegerString(classId)){
-            return new RangeConstraintViolation("The classID must be an unsigned integer!");
-        } else{
-            return new NoConstraintViolation();
-        }
-    }
-    static checkClassIdAsId( classId) {
-        let validationResult = Class.checkClassId( classId);
-        if ((validationResult instanceof NoConstraintViolation)) {
-            if (!classId) {
-                // Is there input
-                validationResult = new MandatoryValueConstraintViolation(
-                    "A value for the ClassID must be provided!");
-            }
-            //TODO: Uniqueness
-            /*
-            else if (Class.instances[classId]) {
-                // id already taken
-                validationResult = new UniquenessConstraintViolation(
-                    `There is already a class record with ClassID ${classId}`);
-            }*/ else if(classId < 1){
-                // Non positive integer
-                validationResult = new RangeConstraintViolation("The ClassID must be a positive integer!");
-            } else {
-                // fine
-                validationResult = new NoConstraintViolation();
-            }
-        }
-        return validationResult;
-    }
     set classId(classId){
-        const validationResult = Class.checkClassIdAsId( classId);
-        if (validationResult instanceof NoConstraintViolation) {
-            this._classId = classId;
-        } else {
-            throw validationResult;
-        }
+        this._classId = classId;
     }
     get classTime(){
         return this._classTime;
-    }
-    static checkTime(time){
-        if(!time){
-            return new MandatoryValueConstraintViolation("A time must be provided!");
-        } if(time instanceof Time){
-            return new RangeConstraintViolation("The time must be of type Time!");
-        }else{
-            // Fine
-            return new NoConstraintViolation();
-        }
     }
     set classTime(classTime){
         this._classTime = classTime;
@@ -80,51 +33,11 @@ class Class {
     get classLocation(){
         return this._classLocation;
     }
-    static checkClassLocation( classLocation) {
-        if(!classLocation){
-            // Is there a classLocation?
-            return new MandatoryValueConstraintViolation("A location must be provided!");
-        } else if(!isNonEmptyString( classLocation)){
-            // Location empty
-            return new RangeConstraintViolation("The location must be a non-empty String!");
-        } else{
-            // Fine
-            return new NoConstraintViolation();
-        }
+    set classLocation(location) {
+        this._classLocation = location;
     }
-    set classLocation(location){
-        const validationResult = Class.checkClassLocation( location);
-        if (validationResult instanceof NoConstraintViolation) {
-            this._classLocation = location;
-        } else {
-            throw validationResult;
-        }
-
-    }
-
     get courseId(){
         return this._courseId;
-    }
-    static checkCourseId(courseId){
-        if(!courseId){
-            // is given
-            return new MandatoryValueConstraintViolation("Every class must belong to some course!");
-        } else if(typeof(courseId) === "object"){
-            /*
-            if(){
-                // Course does not exist
-                return new ReferentialIntegrityConstraintViolation("There is no Course with ID " + courseId);
-            } else{
-                return new NoConstraintViolation();
-            }*/
-        } else if(typeof(courseId) === "number"){
-            /*if(){
-                // Course does not exist
-                return new ReferentialIntegrityConstraintViolation("There is no such a course");
-            } else{
-                return new NoConstraintViolation();
-            }*/
-        }
     }
     set courseId(courseID){
         this._courseId = courseID;
@@ -148,6 +61,7 @@ class Class {
 Class.add = async function (slots){
     const classCollRef = db.collection("classes"),
         classDocRef = classCollRef.doc( slots.classId.toString());
+    console.log(slots);
     try {
         await classDocRef.set(slots);
     } catch (e) {
@@ -227,6 +141,11 @@ Class.destroy = async function (classId){
 Class.update = async function({classId, courseId, classTime, classLocation}){
     const classCollRef = db.collection("classes"),
         classDocRef = classCollRef.doc( classId);
+    console.log(classDocRef);
+    console.log(classId);
+    console.log(courseId);
+    console.log(classTime);
+    console.log(classLocation);
     try {
         // Merge existing data with updated data
         await classDocRef.set({classId, courseId, classTime, classLocation}, {merge: true});

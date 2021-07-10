@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -87,7 +87,13 @@
                         <label>ID: <input type="text" name="classId"></label>
                     </div>
                     <div class="field">
-                        <label>Time: <input type="text" name="classTime"></label>
+                        <label>Date:<input type="date" name="classDate"></label>
+                    </div>
+                    <div class="field">
+                        <label>Start time:<input type="time" name="startTime"></label>
+                    </div>
+                    <div class="field">
+                        <label>End time:<input type="time" name="endTime"></label>
                     </div>
                     <div class="field">
                         <label>Location: <input type="text" name="classLocation"></label>
@@ -112,7 +118,13 @@
                         </label>
                     </div>
                     <div class="field">
-                        <label>Time: <input type="text" name="classTime"/></label>
+                        <label>Date:<input type="date" name="classDate" id="updateDate"></label>
+                    </div>
+                    <div class="field">
+                        <label>Start time:<input type="time" name="startTime" id="updateSTime"></label>
+                    </div>
+                    <div class="field">
+                        <label>End time:<input type="time" name="endTime" id="updateETime"></label>
                     </div>
                     <div class="field">
                         <label>Location: <input type="text" name="classLocation"/></label>

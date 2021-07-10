@@ -50,25 +50,25 @@ async function generateTestData() {
             {
                 classId: 1,
                 courseId: 1,
-                classTime: "Some random time",
+                classTime: ["2021-10-11", "22:00", "23:00"],
                 classLocation: "Some dark alley."
             },
             {
                 classId: 2,
                 courseId: 2,
-                classTime: "Midnight",
+                classTime: ["2021-12-12", "10:00", "13:00"],
                 classLocation: "Middle of the woods."
             },
             {
                 classId: 3,
                 courseId: 3,
-                classTime: "Neverever",
-                classLocation: "Neverland."
+                classTime: ["2021-05-29", "17:00", "17:30"],
+                classLocation: "Neverland: Captain's Hook ship."
             },
             {
                 classId: 4,
                 courseId: 4,
-                classTime: "At noon",
+                classTime: ["2021-08-08", "12:00", "13:00"],
                 classLocation: "In front of saloon."
             },
         ];

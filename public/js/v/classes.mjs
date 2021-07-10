@@ -2,11 +2,14 @@
  Import classes, datatypes and utility procedures
  ***************************************************************/
 import Class from "../m/Class.mjs";
+import Time from "../m/Time.mjs";
 import {fillSelectWithOptions} from "../../lib/util.mjs";
 
 /***************************************************************
  Set up general, use-case-independent UI elements
  ***************************************************************/
+
+//TODO: user should not be able to input id -- at best let it be automatic
 
 // Set up Manage Class UI
 refreshManageDataUI();
@@ -37,8 +40,11 @@ document.getElementById("retrieveAndListAll")
         for (const key of Object.keys( classInstances)) {
             const cClass = classInstances[key];
             const row = tableBodyEl.insertRow();
+            let timeArray = cClass.classTime;
+            let timesStr = `${timeArray[0]}: ${timeArray[1]}-${timeArray[2]}`;
+
             row.insertCell().textContent = cClass.classId;
-            row.insertCell().textContent = cClass.classTime;
+            row.insertCell().textContent = timesStr;
             row.insertCell().textContent = cClass.classLocation;
         }
     });
@@ -55,11 +61,18 @@ document.getElementById("create").addEventListener("click",async function () {
 
 // handle Save button click events
 createFormEl["commit"].addEventListener("click", async function () {
+    let time = new Time({
+        classDate: createFormEl.classDate.value,
+        startTime: createFormEl.startTime.value,
+        endTime: createFormEl.endTime.value
+    });
+    const timeValues = Object.values(time);
     const slots = {
         classId: parseInt(createFormEl.classId.value),
-        classTime: createFormEl.classTime.value,
+        classTime: timeValues,
         classLocation: createFormEl.classLocation.value
     };
+    console.log(slots);
     await Class.add( slots);
 });
 
@@ -83,9 +96,18 @@ updSelClassEl.addEventListener("change", await handleClassSelectChangeEvent);
 
 // handle Save button click events
 updateFormEl["commit"].addEventListener("click", async function () {
+    let time = new Time({
+        classDate: document.getElementById("updateDate").value,
+        startTime: document.getElementById("updateSTime").value,
+        endTime: document.getElementById("updateETime").value
+    });
+    const timeValues = Object.values(time);
+    console.log(timeValues);
     const slots = {
         classId: updateFormEl.classId.value,
-        classTime: updateFormEl.classTime.value,
+        //TODO: courseId should not change (displayed as course Name)
+        courseId: 1,
+        classTime: timeValues,
         classLocation: updateFormEl.classLocation.value
     };
     await Class.update( slots);
@@ -156,16 +178,13 @@ async function handleClassSelectChangeEvent() {
         selectUpdateAgentEl = updateFormEl.selectAgent;
     const classInstances = await Class.retrieveAll();
     const key = (parseInt(updSelClassEl.value) - 1).toString();
-    console.log(classInstances);
     if(key) {
         const cClass = classInstances[key];
-        console.log(typeof(key));
-        console.log(key);
-        console.log(cClass);
-        console.log(updateFormEl);
-        console.log(cClass.categories);
+        let timeArray = cClass.classTime;
         updateFormEl.classId.value = cClass.classId;
-        updateFormEl.classTime.value = cClass.classTime;
+        document.getElementById("updateDate").value = timeArray[0];
+        document.getElementById("updateSTime").value = timeArray[1];
+        document.getElementById("updateETime").value = timeArray[2];
         updateFormEl.classLocation.value = cClass.classLocation;
 
         saveButton.disabled = false;
