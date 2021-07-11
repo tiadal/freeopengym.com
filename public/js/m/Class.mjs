@@ -21,26 +21,87 @@ class Class {
     get classId(){
         return this._classId;
     }
+    // all basic constraints of the id attribute
+    static checkClassId( classId) {
+        if(!isIntegerOrIntegerString(classId)){
+            return new RangeConstraintViolation("The class ID must be an unsigned integer!");
+        } else{
+            return new NoConstraintViolation();
+        }
+    };
+    // mandatory value and uniqueness constraints
+    static async checkClassIdAsId( classId) {
+        let validationResult = Class.checkClassId( classId);
+        if ((validationResult instanceof NoConstraintViolation)) {
+            if (!classId) {
+                validationResult = new MandatoryValueConstraintViolation(
+                    "A value for the class id must be provided!");
+            } else {
+                let classDocSn = await db.collection("classes").doc( classId).get();
+                if (classDocSn.exists) {
+                    validationResult = new UniquenessConstraintViolation(
+                        "There is already a class record with this id!");
+                } else {
+                    validationResult = new NoConstraintViolation();
+                }
+            }
+        }
+        return validationResult;
+    };
     set classId(classId){
-        this._classId = classId;
-    }
-    get classTime(){
-        return this._classTime;
-    }
-    set classTime(classTime){
-        this._classTime = classTime;
-    }
-    get classLocation(){
-        return this._classLocation;
-    }
-    set classLocation(location) {
-        this._classLocation = location;
+        const validationResult = Class.checkClassIdAsId( classId);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._classId = classId;
+        } else {
+            throw validationResult;
+        }
     }
     get courseId(){
         return this._courseId;
     }
     set courseId(courseID){
         this._courseId = courseID;
+    }
+    get classTime(){
+        return this._classTime;
+    }
+    static checkClassTime( time) {
+        if (!time) {
+            return new MandatoryValueConstraintViolation(
+                "A class time must be provided!");
+        } else if (!(time instanceof Time)) {
+            return new RangeConstraintViolation("The class time must be an Time!");
+        } else {
+            return new NoConstraintViolation();
+        }
+    };
+    set classTime(classTime){
+        const validationResult = Class.checkClassTime( classTime);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._classTime = classTime;
+        } else {
+            throw validationResult;
+        }
+    }
+    get classLocation(){
+        return this._classLocation;
+    }
+    static checkLocation( location) {
+        if (!location) {
+            return new MandatoryValueConstraintViolation("A location must be provided!");
+        } else if (!isNonEmptyString( location)) {
+            return new RangeConstraintViolation("The location must be a non-empty string!");
+        } else {
+            return new NoConstraintViolation();
+        }
+    };
+    set classLocation(location) {
+        const validationResult = Class.checkLocation( location);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._classLocation = location;
+        } else {
+            throw validationResult;
+        }
     }
 
     // Serialize class object
@@ -54,21 +115,50 @@ class Class {
 /********************************************************
  *** Class-level ("static") storage management methods ***
  *********************************************************/
-
+/**
+ *  Conversion between a Book object and a corresponding Firestore document
+ */
+Class.converter = {
+    toFirestore: function (cClass) {
+        const data = {
+            classId: cClass.classId,
+            courseId: cClass.courseId,
+            classTime: cClass.classTime,
+            classLocation: cClass.classLocation
+        };
+        if (cClass.edition) data.edition = cClass.edition;
+        return data;
+    },
+    fromFirestore: function (snapshot, options) {
+        const data = snapshot.data( options);
+        return new Class( data);
+    },
+};
 /**
  *  Create a new class
  */
 Class.add = async function (slots){
-    const classCollRef = db.collection("classes"),
-        classDocRef = classCollRef.doc( slots.classId.toString());
-    console.log(slots);
+    let cClass = null;
     try {
-        await classDocRef.set(slots);
+        cClass = new Class(slots)
+        // invoke asynchronous ID/uniqueness check
+        let validationResult = await Class.checkClassIdAsId( cClass.classId);
+        if (!validationResult instanceof NoConstraintViolation) {
+            throw validationResult;
+        }
     } catch (e) {
-        console.error(`Error when adding class record: ${e}`);
-        return;
+        console.error(`${e.constructor.name}: ${e.message}`);
+        cClass = null;
     }
-    console.log(`Class record ${slots.classId} created`);
+    if (cClass) {
+        try {
+            const classDocRef = db.collection("classes").doc( cClass.classId);
+            await classDocRef.withConverter( Class.converter).set( cClass);
+            console.log(`Class record "${cClass.classId}" created!`);
+        } catch (e) {
+            console.error(`Error when adding class record: ${e}`);
+        }
+    }
 }
 
 /**
@@ -76,60 +166,8 @@ Class.add = async function (slots){
  */
 Class.destroy = async function (classId){
     try{
-        await db.collection("classes").doc(classId);
-        /*const classCollRef = db.collection("classes");
-        let classQuerySnapshot = await classCollRef.get();
-        const classDocs = classQuerySnapshot.docs;
-        const classRecords = classDocs.map( d => d.data());
-
-        console.log(classCollRef);
-        console.log(classQuerySnapshot);
-        console.log(classDocs);
-        console.log(classRecords);
-        console.log(classRecords[classId-1]);
-
-        for(const classIdx in classRecords){
-            let cClass = classRecords[classIdx];
-            if(cClass.classId === parseInt(classId)) {
-                console.log("And the class is:");
-                console.log(cClass);
-                let classRef = await db.collection("classes").doc(classId);
-                console.log(classRef);
-
-                classRef.get().then((doc) => {
-                    if (doc.exists) {
-                        console.log("Document data:", doc.data());
-                        console.log(doc.data["classId"]);
-                        console.log(doc.data["classId"])
-                    } else {
-                        // doc.data() will be undefined in this case
-                        console.log("No such document!");
-                    }
-                }).catch((error) => {
-                    console.log("Error getting document:", error);
-                });
-            }
-        }
-
-        db.collection("classes").where("classId", "==", parseInt(classId))
-            .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
-                });
-            })
-            .catch((error) => {
-                console.log("Error getting documents: ", error);
-            });
-
-
-        let cClass = classRecords[classId - 1];
-        console.log(cClass.courseId);
-        let courseId = cClass.courseId.toString();
-        console.log(typeof classId);
-        console.log(typeof courseId);
-        console.log(courseId - 1); */
+        await db.collection("classes").doc(classId).delete();
+        console.log(`Class record "${classId}" deleted!`);
     } catch(e){
         console.log("Error deleting class with id " + classId + ": " + e);
     }
@@ -138,40 +176,63 @@ Class.destroy = async function (classId){
 /**
  *  Update a class
  */
-Class.update = async function({classId, courseId, classTime, classLocation}){
-    const classCollRef = db.collection("classes"),
-        classDocRef = classCollRef.doc( classId);
-    console.log(classDocRef);
-    console.log(classId);
-    console.log(courseId);
-    console.log(classTime);
-    console.log(classLocation);
+Class.update = async function (slots) {
+    const updatedSlots = {};
+    let validationResult = null,
+        classRec = null,
+        classDocRef = null;
     try {
-        // Merge existing data with updated data
-        await classDocRef.set({classId, courseId, classTime, classLocation}, {merge: true});
+        // retrieve up-to-date class record
+        classDocRef = db.collection("classes").doc(slots.classId);
+        const classDocSn = await classDocRef.withConverter(Class.converter).get();
+        classRec = classDocSn.data();
     } catch (e) {
-        console.error(`Error when updating class record: ${e}`);
-        return;
+        console.error(`${e.constructor.name}: ${e.message}`);
     }
-    console.log(`Class record ${classId} updated`);
-}
+    try {
+        if (classRec.classTime !== slots.classTime) {
+            validationResult = Class.checkClassTime( slots.classTime);
+            if (validationResult instanceof NoConstraintViolation) {
+                updatedSlots.classTime = slots.classTime;
+            } else {
+                throw validationResult;
+            }
+        }
+        if (classRec.classLocation !== parseInt( slots.classLocation)) {
+            validationResult = Class.checkLocation( slots.year);
+            if (validationResult instanceof NoConstraintViolation) {
+                updatedSlots.classLocation = parseInt( slots.classLocation);
+            } else {
+                throw validationResult;
+            }
+        }
+    } catch (e) {
+        console.error(`${e.constructor.name}: ${e.message}`);
+    }
+    let updatedProperties = Object.keys( updatedSlots);
+    if (updatedProperties.length > 0) {
+        // update class record
+        await classDocRef.update( updatedSlots);
+        console.log(`Property(ies) "${updatedProperties.toString()}" modified for class record "${slots.classId}"`);
+    } else {
+        console.log(`No property value changed for class record "${slots.classId}"!`);
+    }
+};
 
 /**
- *  Retrieve and list all classes
+ *  Load all class records
  */
-Class.retrieveAll = async function(){
-    const classCollRef = db.collection("classes");
-    let classQuerySnapshot = null;
+Class.retrieveAll = async function (order) {
+    let classCollRef = db.collection("classes");
     try {
-        classQuerySnapshot = await classCollRef.get();
+        if (order) classCollRef = classCollRef.orderBy( order);
+        const classRecords = (await classCollRef.withConverter( Class.converter)
+            .get()).docs.map( d => d.data());
+        console.log(`${classRecords.length} class records retrieved ${order ? "ordered by " + order : ""}`);
+        return classRecords;
     } catch (e) {
-        console.error(`Error when retrieving class record ${e}`)
-        return null;
+        console.error(`Error retrieving class records: ${e}`);
     }
-    const classDocs = classQuerySnapshot.docs,
-        classRecords = classDocs.map( d => d.data());
-    console.log(`${classRecords.length} class records retrieved.`);
-    return classRecords;
-}
+};
 
 export default Class;
