@@ -46,39 +46,15 @@ async function generateTestData() {
     }
 
     try{
-        let classInstances = [
-            {
-                classId: 1,
-                courseId: 1,
-                classTime: ["2021-10-11", "22:00", "23:00"],
-                classLocation: "Some dark alley."
-            },
-            {
-                classId: 2,
-                courseId: 2,
-                classTime: ["2021-12-12", "10:00", "13:00"],
-                classLocation: "Middle of the woods."
-            },
-            {
-                classId: 3,
-                courseId: 3,
-                classTime: ["2021-05-29", "17:00", "17:30"],
-                classLocation: "Neverland: Captain's Hook ship."
-            },
-            {
-                classId: 4,
-                courseId: 4,
-                classTime: ["2021-08-08", "12:00", "13:00"],
-                classLocation: "In front of saloon."
-            },
-        ];
-        await Promise.all(classInstances.map(
-            classRec => db.collection("classes").doc(classRec.classId.toString()).set(classRec)
-        ));
+        console.log('Generating class data...');
+        const response = await fetch("../../test-data/classes.json");
+        const classRecords = await response.json();
+        await Promise.all( classRecords.map( d => Class.add( d)));
+        console.log(`${classRecords.length} classes saved`);
     } catch(e){
         console.log("Error: " + e);
     }
-    console.log(`Testdata have been generated.`);
+    console.log(`Test data have been generated.`);
 }
 
 /**
@@ -94,13 +70,15 @@ async function clearData() {
         //show confirmation
         console.log(`${Object.values( courseRecords).length} courses deleted`);
 
-        //retrieve all class documents from Firestore
-        const classRecords = await Class.retrieveAll();
-        //delete all documents
-        await Promise.all( classRecords.map(
-            classRec => db.collection("classes").doc( classRec.classId.toString()).delete()));
-        //show confirmation
-        console.log(`${Object.values( classRecords).length} classes deleted`);
+        let classCollRef = db.collection("classes");
+        try {
+            const classDocSns = (await classCollRef.withConverter( Class.converter)
+                .get()).docs;
+            await Promise.all( classDocSns.map( c => Class.destroy( c.id)));
+            console.log(`${classDocSns.length} classes deleted.`);
+        } catch (e) {
+            console.error(`${e.constructor.name}: ${e.message}`);
+        }
     }
 }
 

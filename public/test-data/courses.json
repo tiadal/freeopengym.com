@@ -1,0 +1,30 @@
+[
+  {
+    "courseId": 1,
+    "courseName": "Yoga in black",
+    "categories": "Yoga",
+    "price": 42,
+    "description": "Nighttime yoga course"
+  },
+  {
+    "courseId": 2,
+    "courseName": "Red Socks football",
+    "categories": "Football",
+    "price": 0,
+    "description": "Amateur football"
+  },
+  {
+    "courseId": 3,
+    "courseName": "Frisbee fun",
+    "categories": "Frisbee",
+    "price": 42,
+    "description": ""
+  },
+  {
+    "courseId": 4,
+    "courseName": "Mythic gamers",
+    "categories": "E-Sports",
+    "price": 0,
+    "description": "Searching for a partner for League of Legends duo queue. At least silver 5."
+  }
+]

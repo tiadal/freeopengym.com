@@ -37,7 +37,7 @@ class Class {
                 validationResult = new MandatoryValueConstraintViolation(
                     "A value for the class id must be provided!");
             } else {
-                let classDocSn = await db.collection("classes").doc( classId).get();
+                let classDocSn = await db.collection("classes").doc( classId.toString()).get();
                 if (classDocSn.exists) {
                     validationResult = new UniquenessConstraintViolation(
                         "There is already a class record with this id!");
@@ -126,7 +126,6 @@ Class.converter = {
             classTime: cClass.classTime,
             classLocation: cClass.classLocation
         };
-        if (cClass.edition) data.edition = cClass.edition;
         return data;
     },
     fromFirestore: function (snapshot, options) {
@@ -140,7 +139,7 @@ Class.converter = {
 Class.add = async function (slots){
     let cClass = null;
     try {
-        cClass = new Class(slots)
+        cClass = new Class(slots);
         // invoke asynchronous ID/uniqueness check
         let validationResult = await Class.checkClassIdAsId( cClass.classId);
         if (!validationResult instanceof NoConstraintViolation) {
@@ -152,7 +151,7 @@ Class.add = async function (slots){
     }
     if (cClass) {
         try {
-            const classDocRef = db.collection("classes").doc( cClass.classId);
+            const classDocRef = db.collection("classes").doc( cClass.classId.toString());
             await classDocRef.withConverter( Class.converter).set( cClass);
             console.log(`Class record "${cClass.classId}" created!`);
         } catch (e) {
@@ -166,7 +165,7 @@ Class.add = async function (slots){
  */
 Class.destroy = async function (classId){
     try{
-        await db.collection("classes").doc(classId).delete();
+        await db.collection("classes").doc(classId.toString()).delete();
         console.log(`Class record "${classId}" deleted!`);
     } catch(e){
         console.log("Error deleting class with id " + classId + ": " + e);
@@ -183,7 +182,7 @@ Class.update = async function (slots) {
         classDocRef = null;
     try {
         // retrieve up-to-date class record
-        classDocRef = db.collection("classes").doc(slots.classId);
+        classDocRef = db.collection("classes").doc(slots.classId.toString());
         const classDocSn = await classDocRef.withConverter(Class.converter).get();
         classRec = classDocSn.data();
     } catch (e) {

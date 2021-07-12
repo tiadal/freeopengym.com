@@ -1,10 +1,39 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
-      //: if
-      //    request.time < timestamp.date(2021, 7, 27);
+    /** VALIDATION FUNCTIONS **/
+    // check if classId is string or number
+    function checkClassId( classId) {
+      return (classId is int || classId is string) && classId != null;
+    }
+    // check if exist document with same classId
+    function checkClassIdAsId( classId) {
+      return !(exists(/databases/$(database)/documents/classes/$(classId)));
+    }
+    /** VALIDATION RULES **/
+    match /{classes}/{document=**} {
+      /** RULES FOR allow read WITH CONVENIENCE METHOD - LOW GRANULARITY **/
+      /** NO authentication required **/
+      allow read: if request.auth != null;
+
+      /** RULES FOR allow write WITH STANDARD METHODS - HIGH GRANULARITY **/
+      /** authentication required **/
+      //validate when create new class record
+      allow create: if request.auth.token.email_verified == true
+                       && checkClassIdAsId( request.resource.data.classId) == true
+                       && checkClassId( request.resource.data.classId) == true
+                       && request.resource.data.classTime != null
+                       && request.resource.data.classLocation != null;
+
+      // validate when update class record
+      allow update: if request.auth.token.email_verified == true
+                       && (request.resource.data.diff( resource.data).affectedKeys()
+                           .hasOnly(['classTime', 'classLocation']))
+                       && request.resource.data.classTime != null
+                       && request.resource.data.classLocation != null;
+
+      // validate when delete class record
+      allow delete: if request.auth.token.email_verified == true;
     }
   }
 }
