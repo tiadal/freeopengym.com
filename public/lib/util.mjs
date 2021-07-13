@@ -322,5 +322,16 @@ function isNonEmptyString(s){
   return typeof(s) === "string" && s.trim !== "";
 }
 
+/**
+ * Show or hide progress bar element
+ * @param {string} status
+ */
+function showProgressBar (status) {
+  let progressEl = document.querySelector( 'progress');
+  if (status === "show") progressEl.hidden = false;
+  if (status === "hide") progressEl.hidden = true;
+}
+
+
 export { fillSelectWithOptions, fillSelectWithEnum, createListFromMap, createMultipleChoiceWidget,
-  cloneObject, isIntegerOrIntegerString, isNonEmptyString };
+  cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar };

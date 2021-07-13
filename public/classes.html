@@ -17,6 +17,7 @@
     <script src = "js/c/initialize.mjs"></script>
     <script src = "js/v/authenticateUser.mjs"></script>
     <script src="js/v/classes.mjs" type="module"></script>
+    <script src="../../../../Group_assignments/webapp-group2/docs/assignment5/src/v/movies.mjs"></script>
 </head>
 <body>
     <header>
@@ -62,7 +63,19 @@
             <section id="Class-R" class="UI-Page">
                 <!-- ======================================================= -->
                 <h1 class="show-retrieve">Class details</h1>
-                <table id="classTable">
+                <div class="wrapper clearfix">
+                    <hr>
+                    <div>
+                        <label>Ordered by:
+                            <select>
+                                <option value="time">Time</option>
+                                <option value="location">Location</option>
+                            </select>
+                        </label>
+                    </div>
+                    <progress hidden="hidden" max="100">%</progress>
+
+                    <table id="classTable">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -77,6 +90,7 @@
                         <button type="button" class="back-to-menu">Back to menu</button>
                     </div>
                 </div>
+              </div>
             </section>
             <!-- ======================================================= -->
             <section id="Class-C" class="UI-Page">

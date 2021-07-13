@@ -3,7 +3,7 @@
  ***************************************************************/
 import Class from "../m/Class.mjs";
 import Time from "../m/Time.mjs";
-import {fillSelectWithOptions} from "../../lib/util.mjs";
+import {fillSelectWithOptions, showProgressBar} from "../../lib/util.mjs";
 
 /***************************************************************
  Set up general, use-case-independent UI elements
@@ -34,10 +34,17 @@ document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
         document.getElementById("Class-M").style.display = "none";
         document.getElementById("Class-R").style.display = "block";
-        const tableBodyEl = document.querySelector("section#Class-R>table>tbody");
+        const tableBodyEl = document.querySelector("section#Class-R>div>table>tbody");
+        const selectOrderEl = document.querySelector("section#Class-R>div>div>label>select");
         tableBodyEl.innerHTML = "";  // drop old content
-        const classInstances = await Class.retrieveAll();
-        for (const key of Object.keys( classInstances)) {
+        //const classInstances = await Class.retrieveAll();
+        await renderList("classId",tableBodyEl);
+        selectOrderEl.addEventListener("change", async function (e) {
+            // invoke list with order selected
+            await renderList( e.target.value);
+        });
+
+    /*    for (const key of Object.keys( classInstances)) {
             const cClass = classInstances[key];
             const row = tableBodyEl.insertRow();
             let timeArray = cClass.classTime;
@@ -46,7 +53,7 @@ document.getElementById("retrieveAndListAll")
             row.insertCell().textContent = cClass.classId;
             row.insertCell().textContent = timesStr;
             row.insertCell().textContent = cClass.classLocation;
-        }
+        }*/
     });
 
 /**********************************************
@@ -57,6 +64,22 @@ document.getElementById("create").addEventListener("click",async function () {
     document.getElementById("Class-M").style.display = "none";
     document.getElementById("Class-C").style.display = "block";
     createFormEl.reset();
+});
+
+createFormEl.classId.addEventListener("input", function(){
+    createFormEl.classId.setCustomValidity( Class.checkClassId( createFormEl.classId.value).message);
+});
+createFormEl.classId.addEventListener("input", function(){
+    createFormEl.classDate.setCustomValidity( Time.checkClassDate( createFormEl.classDate.value).message);
+});
+createFormEl.classId.addEventListener("input", function(){
+    createFormEl.startTime.setCustomValidity( Time.checkStartTime( createFormEl.startTime.value).message);
+});
+createFormEl.classId.addEventListener("input", function(){
+    createFormEl.endTime.setCustomValidity( Time.checkEndTime( createFormEl.endTime.value).message);
+});
+createFormEl.classLocation.addEventListener("input", function(){
+    createFormEl.classLocation.setCustomValidity( Class.checkLocation( createFormEl.classLocation.value).message);
 });
 
 // handle Save button click events
@@ -72,8 +95,18 @@ createFormEl["commit"].addEventListener("click", async function () {
         classTime: timeValues,
         classLocation: createFormEl.classLocation.value
     };
-    console.log(slots);
-    await Class.add( slots);
+    showProgressBar( "show");
+    createFormEl.classId.setCustomValidity(( await Class.checkClassIdAsId( slots.classId)).message);
+    createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classDate).message);
+    createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.startTime).message);
+    createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.endTime).message);
+    createFormEl.classLocation.setCustomValidity( Class.checkLocation( slots.classLocation).message);
+
+    if (createFormEl.checkValidity()) {
+        await Class.add( slots);
+        createFormEl.reset();
+    }
+    showProgressBar( "hide");
 });
 
 /**********************************************
@@ -192,4 +225,21 @@ async function handleClassSelectChangeEvent() {
         updateFormEl.reset();
         saveButton.disabled = true;
     }
+}
+
+async function renderList( order, tableBodyEl) {
+    showProgressBar( "show");
+    // load all book records using order param
+    const classRecords = await Class.retrieveAll( order);
+    // for each book, create a table row with a cell for each attribute
+    for (let c of classRecords) {
+        let timeArray = c.classTime;
+        let timesStr = `${timeArray[0]}: ${timeArray[1]}-${timeArray[2]}`;
+
+        let row = tableBodyEl.insertRow();
+        row.insertCell(-1).textContent = c.classId;
+        row.insertCell(-1).textContent = timesStr;
+        row.insertCell(-1).textContent = c.classLocation;
+    }
+    showProgressBar( "hide");
 }
