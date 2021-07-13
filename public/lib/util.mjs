@@ -111,6 +111,21 @@ function fillSelectWithOptions(selectEl, selectionRange, keyProp, optPar) {
     selectEl.add( optionEl);
   }
 }
+
+/**
+ * Fill a select element with Enum elements
+ *
+ * @param {object} selectEl  A select(ion list) element
+ * @param {object} selectionRange  A map of objects
+ */
+function fillSelectWithEnum(selectEl, selectionRange) {
+  let optionEl = null;
+  for(const i in selectionRange){
+    let obj = selectionRange[i];
+    optionEl = createOption( i, selectionRange[i]);
+    selectEl.add(optionEl);
+  }
+}
 // *************** Multiple Choice Widget ****************************************
 /**
  * Create the contents of an Multiple Choice widget, which is a div containing
@@ -307,5 +322,5 @@ function isNonEmptyString(s){
   return typeof(s) === "string" && s.trim !== "";
 }
 
-export { fillSelectWithOptions, createListFromMap, createMultipleChoiceWidget,
+export { fillSelectWithOptions, fillSelectWithEnum, createListFromMap, createMultipleChoiceWidget,
   cloneObject, isIntegerOrIntegerString, isNonEmptyString };

@@ -11,6 +11,17 @@ import {NoConstraintViolation, MandatoryValueConstraintViolation,
     IntervalConstraintViolation, ReferentialIntegrityConstraintViolation}
     from "../../lib/errorTypes.mjs";
 
+const categories = {
+      FOOTBALL: "Football",
+      HOCKEY: "Hockey",
+      YOGA: "Yoga",
+      OUTDOOR: "Outdoor",
+      INDOOR: "Indoor",
+      RUNNING: "Running",
+      TEAM: "Team",
+      ESPORTS: "E-Sports"
+};
+
 class Course {
     constructor({courseId, courseName, categories, price, description, availableClasses}) {
         this.courseId = courseId;
@@ -28,6 +39,7 @@ class Course {
     }
     //TODO next time: check
     set courseId(courseId){
+      console.log(courseId);
         const validationResult = Course.checkCourseId(courseId);
         if(validationResult instanceof NoConstraintViolation){
           this._courseId = courseId;
@@ -38,7 +50,7 @@ class Course {
 
     static checkCourseId(courseId){
       if(!courseId){
-        return new MandatoryValueConstraintViolation("A Course ID must be provided!");
+        return new MandatoryValueConstraintViolation("A Course ID must be provided as unsigned Integer!");
       } else if(!isIntegerOrIntegerString(courseId)){
         return new RangeConstraintViolation("The course ID must be an unsigned integer");
       } else if(parseInt(courseId) < 1){ // already clear is number or string
@@ -57,7 +69,7 @@ class Course {
             "There is already a course record with this id"
           );
         } else{
-          validationresult = new NoConstraintViolation();
+          validationResult = new NoConstraintViolation();
         }
       }
       return validationResult;
@@ -89,8 +101,37 @@ class Course {
     }
     //TODO next time: check
     set categories(categories){
-        this._categories = categories;
+        this._categories = [];
+        if(Array.isArray(categories)){
+          for(const i of categories){
+            this.addCategory(i);
+          }
+        }
     }
+
+    static checkCategory(category){
+      if(categories[category]){
+        return new NoConstraintViolation();
+      } else{
+        return new ReferentialIntegrityConstraintViolation("This category is not available");
+      }
+    }
+
+    addCategory(category){
+        const validationResult = Course.checkCategory(category);
+        if(validationResult instanceof NoConstraintViolation){
+            this._categories.push(categories[category]);
+        } else{
+          throw validationResult;
+        }
+    }
+
+    removeCategory(remCategories){
+      for(const i in remCategories){
+        console.log(i);
+      }
+    }
+
     get price(){
         return this._price;
     }
@@ -222,4 +263,5 @@ Course.retrieveAll = async function(){
     return courseRecords;
 }
 
-export default Course;
+//export default Course;
+export {Course, categories};

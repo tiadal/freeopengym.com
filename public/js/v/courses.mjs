@@ -1,8 +1,8 @@
 /***************************************************************
  Import classes, datatypes and utility procedures
  ***************************************************************/
-import Course from "../m/Course.mjs";
-import {fillSelectWithOptions} from "../../lib/util.mjs";
+import {Course, categories} from "../m/Course.mjs";
+import {fillSelectWithOptions, fillSelectWithEnum} from "../../lib/util.mjs";
 
 /***************************************************************
  Set up general, use-case-independent UI elements
@@ -70,21 +70,30 @@ document.getElementById("retrieveAndListAll")
  Use case Create Course
  **********************************************/
 const createFormEl = document.querySelector("section#Course-C > form");
+const selectCategoriesEl = createFormEl.selectCategories;
 document.getElementById("create").addEventListener("click",async function () {
     document.getElementById("Course-M").style.display = "none";
     document.getElementById("Course-C").style.display = "block";
+    fillSelectWithEnum( selectCategoriesEl, categories);
     createFormEl.reset();
 });
 
 // handle Save button click events
 createFormEl["commit"].addEventListener("click", async function () {
+    const selOptionsEl = selectCategoriesEl.selectedOptions;
+    let selCategories = [];
+    for(const i of selOptionsEl){
+      selCategories.push(i.value);
+    }
+    console.log(selCategories)
     const slots = {
         courseId: parseInt(createFormEl.courseId.value),
         courseName: createFormEl.courseName.value,
-        categories: createFormEl.categories.value,
+        categories: selCategories,
         price: createFormEl.price.value,
         description: createFormEl.description.value
     };
+    console.log(slots);
     await Course.add( slots);
 });
 

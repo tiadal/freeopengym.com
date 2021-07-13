@@ -1,4 +1,4 @@
-import Course from "../m/Course.mjs";
+import {Course} from "../m/Course.mjs";
 import Class from "../m/Class.mjs";
 
 /**
