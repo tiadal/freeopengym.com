@@ -5,6 +5,12 @@
  * slots - Object creation slots.
  */
 
+import {isIntegerOrIntegerString, isNonEmptyString} from "../../lib/util.mjs";
+import {NoConstraintViolation, MandatoryValueConstraintViolation,
+    RangeConstraintViolation, PatternConstraintViolation, UniquenessConstraintViolation,
+    IntervalConstraintViolation, ReferentialIntegrityConstraintViolation}
+    from "../../lib/errorTypes.mjs";
+
 class Course {
     constructor({courseId, courseName, categories, price, description, availableClasses}) {
         this.courseId = courseId;
@@ -22,15 +28,62 @@ class Course {
     }
     //TODO next time: check
     set courseId(courseId){
-        this._courseId = courseId;
+        const validationResult = Course.checkCourseId(courseId);
+        if(validationResult instanceof NoConstraintViolation){
+          this._courseId = courseId;
+        } else{
+          throw validationResult;
+        }
     }
+
+    static checkCourseId(courseId){
+      if(!courseId){
+        return new MandatoryValueConstraintViolation("A Course ID must be provided!");
+      } else if(!isIntegerOrIntegerString(courseId)){
+        return new RangeConstraintViolation("The course ID must be an unsigned integer");
+      } else if(parseInt(courseId) < 1){ // already clear is number or string
+        return new RangeConstraintViolation("The course ID must be an unsigned integer");
+      } else{
+        return new NoConstraintViolation();
+      }
+    }
+
+    static async checkCourseIdAsId(courseId){
+      let validationResult = Course.checkCourseId(courseId);
+      if(validationResult instanceof NoConstraintViolation){
+        let courseDoc = await db.collection("courses").doc(courseId.toString()).get();
+        if(courseDoc.exists){
+          validationResult = new UniquenessConstraintViolation(
+            "There is already a course record with this id"
+          );
+        } else{
+          validationresult = new NoConstraintViolation();
+        }
+      }
+      return validationResult;
+    }
+
     get courseName(){
         return this._courseName;
     }
     //TODO next time: check
     set courseName(courseName){
+      const validationResult = Course.checkCourseName(courseName);
+      if(validationResult instanceof NoConstraintViolation){
         this._courseName = courseName;
+      } else{
+        throw validationResult;
+      }
     }
+
+    static checkCourseName(courseName){
+      if(!courseName || !isNonEmptyString(courseName)){
+        return new MandatoryValueConstraintViolation("A Course name must be provided!");
+      } else {
+        return new NoConstraintViolation();
+      }
+    }
+
     get categories(){
         return this._categories;
     }
@@ -43,8 +96,24 @@ class Course {
     }
     //TODO next time: check
     set price(price){
-        this._price = price;
+        const validationResult = Course.checkPrice(price);
+        if(validationResult instanceof NoConstraintViolation){
+          this._price = price;
+      } else {
+          throw validationResult;
+      }
     }
+
+    static checkPrice(price){
+      if(!price){
+        return new MandatoryValueConstraintViolation("A price must be provided");
+      } else if(!isIntegerOrIntegerString(price)){
+        return new RangeConstraintViolation("The price must be an Integer");
+      } else {
+        return new NoConstraintViolation();
+      }
+    }
+
     get description(){
         if (this._description) {
             return this._description;
@@ -52,7 +121,10 @@ class Course {
     }
     //TODO next time: check
     set description(description){
-        this._description = description;
+        // Save memory if there is an empty string as description
+        if(isNonEmptyString(description)){
+          this._description = description;
+        }
     }
     get availableClasses(){
         return this._availableClasses;
@@ -68,6 +140,20 @@ class Course {
 /********************************************************
  *** Class-level ("static") storage management methods ***
  *********************************************************/
+Course.convert = function(course){
+  let slots = {
+    courseId: course.courseId,
+    courseName: course.courseName,
+    categories: course.categories,
+    price: course.price
+  }
+  if(course.description){
+    slots.description = course.description;
+  }
+
+  return slots
+}
+
 /**
  *  Create a new course
  */
@@ -75,9 +161,16 @@ Course.add = async function (slots){
     const courseCollRef = db.collection("courses"),
           courseDocRef = courseCollRef.doc( slots.courseId.toString());
     try {
-        await courseDocRef.set(slots);
+      console.log(slots);
+        let c = new Course(slots);
+        let validationResult = await Course.checkCourseIdAsId(c.courseId);
+        if(validationResult instanceof NoConstraintViolation){
+          await courseDocRef.set(Course.convert(c));
+        } else {
+          throw validationResult;
+        }
     } catch (e) {
-        console.error(`Error when adding course record: ${e}`);
+        console.error(`Error when adding course record: ${e.message}`);
         return;
     }
     console.log(`Course record ${slots.courseId} created`);
