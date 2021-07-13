@@ -23,7 +23,9 @@ class Class {
     }
     // all basic constraints of the id attribute
     static checkClassId( classId) {
-        if(!isIntegerOrIntegerString(classId)){
+        if(!classId){
+          return new MandatoryValueConstraintViolation("A class ID must be given");
+        } else if(!isIntegerOrIntegerString(classId)){
             return new RangeConstraintViolation("The class ID must be an unsigned integer!");
         } else{
             return new NoConstraintViolation();
@@ -49,7 +51,7 @@ class Class {
         return validationResult;
     };
     set classId(classId){
-        const validationResult = Class.checkClassIdAsId( classId);
+        const validationResult = Class.checkClassId( classId);
         if (validationResult instanceof NoConstraintViolation) {
             this._classId = classId;
         } else {
@@ -76,7 +78,8 @@ class Class {
         }
     };
     set classTime(classTime){
-        const validationResult = Class.checkClassTime( classTime);
+      // TODO implement times
+        const validationResult = new NoConstraintViolation();// Class.checkClassTime( classTime);
         if (validationResult instanceof NoConstraintViolation) {
             this._classTime = classTime;
         } else {
@@ -106,7 +109,7 @@ class Class {
 
     // Serialize class object
     toString() {
-        let classStr = `Class{ ID: ${this._classId}, Course:${this._courseId.courseName}, Time: ${this._classTime}, 
+        let classStr = `Class{ ID: ${this._classId}, Course:${this._courseId.courseName}, Time: ${this._classTime},
         Location: ${this._classLocation}}`;
         return `${classStr}`;
     }
