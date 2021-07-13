@@ -1,7 +1,7 @@
 /**
 * Constructor function for the class Class
 * @constructor
-* @param {{classId: number, courseId: number, classTime: Time, classLocation: string}}
+* @param {{classId: number, classTime: Time, classLocation: string}}
 * slots - Object creation slots.
 */
 import {isIntegerOrIntegerString, isNonEmptyString} from "../../lib/util.mjs";
@@ -12,9 +12,8 @@ import {NoConstraintViolation, MandatoryValueConstraintViolation,
 import Time from "./Time.mjs";
 
 class Class {
-    constructor({classId, courseId, classTime, classLocation}) {
+    constructor({classId, classTime, classLocation}) {
         this.classId = classId;
-        this.courseId = courseId;
         this.classTime = classTime;
         this.classLocation = classLocation;
     }
@@ -27,6 +26,8 @@ class Class {
           return new MandatoryValueConstraintViolation("A class ID must be given");
         } else if(!isIntegerOrIntegerString(classId)){
             return new RangeConstraintViolation("The class ID must be an unsigned integer!");
+        } else if (parseInt(classId) < 1){
+            return new RangeConstraintViolation("The class ID must be bigger than 0!");
         } else{
             return new NoConstraintViolation();
         }
@@ -58,12 +59,6 @@ class Class {
             throw validationResult;
         }
     }
-    get courseId(){
-        return this._courseId;
-    }
-    set courseId(courseID){
-        this._courseId = courseID;
-    }
     get classTime(){
         return this._classTime;
     }
@@ -71,15 +66,18 @@ class Class {
         if (!time) {
             return new MandatoryValueConstraintViolation(
                 "A class time must be provided!");
-        } else if (!(time instanceof Time)) {
-            return new RangeConstraintViolation("The class time must be an Time!");
+        } else if (Array.isArray(time) && time.length === 3) {
+            if (!Time.checkClassDate(time[0]) || !Time.checkStartTime(time[1]) || !Time.checkEndTime(time[2])){
+                return new RangeConstraintViolation("The class time must be a correct time slot!");
+            } else {
+                return new NoConstraintViolation();
+            }
         } else {
             return new NoConstraintViolation();
         }
     };
     set classTime(classTime){
-      // TODO implement times
-        const validationResult = new NoConstraintViolation();// Class.checkClassTime( classTime);
+        const validationResult = Class.checkClassTime( classTime);
         if (validationResult instanceof NoConstraintViolation) {
             this._classTime = classTime;
         } else {
@@ -109,7 +107,7 @@ class Class {
 
     // Serialize class object
     toString() {
-        let classStr = `Class{ ID: ${this._classId}, Course:${this._courseId.courseName}, Time: ${this._classTime},
+        let classStr = `Class{ ID: ${this._classId}, Time: ${this._classTime},
         Location: ${this._classLocation}}`;
         return `${classStr}`;
     }
@@ -125,7 +123,6 @@ Class.converter = {
     toFirestore: function (cClass) {
         const data = {
             classId: cClass.classId,
-            courseId: cClass.courseId,
             classTime: cClass.classTime,
             classLocation: cClass.classLocation
         };
@@ -201,9 +198,9 @@ Class.update = async function (slots) {
             }
         }
         if (classRec.classLocation !== parseInt( slots.classLocation)) {
-            validationResult = Class.checkLocation( slots.year);
+            validationResult = Class.checkLocation( slots.classLocation);
             if (validationResult instanceof NoConstraintViolation) {
-                updatedSlots.classLocation = parseInt( slots.classLocation);
+                updatedSlots.classLocation =  slots.classLocation;
             } else {
                 throw validationResult;
             }
