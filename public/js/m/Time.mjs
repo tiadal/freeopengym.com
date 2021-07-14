@@ -1,7 +1,5 @@
 import {
-    MandatoryValueConstraintViolation,
-    NoConstraintViolation,
-    RangeConstraintViolation
+    NoConstraintViolation, RangeConstraintViolation,
 } from "../../lib/errorTypes.mjs";
 import {isIntegerOrIntegerString} from "../../lib/util.mjs";
 
@@ -22,6 +20,16 @@ class Time {
     }
     //TODO
     static checkClassDate( date) {
+        /*if (date < new Date().toISOString().slice(0, 10)){
+
+            return new RangeConstraintViolation("The date must be bigger than today!");
+        }
+        console.log(new Date().toISOString().slice(0, 10));
+        console.log(typeof date);
+        console.log(date);
+        console.log(typeof new Date().toISOString().slice(0, 10));
+        console.log("smaller " + new Date().toISOString().slice(0, 10) > date);
+        console.log("bigger " + new Date().toISOString().slice(0, 10) < date);*/
         return new NoConstraintViolation();
     };
     set classDate(date){
