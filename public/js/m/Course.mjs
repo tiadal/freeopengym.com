@@ -19,7 +19,8 @@ const categories = {
       INDOOR: "Indoor",
       RUNNING: "Running",
       TEAM: "Team",
-      ESPORTS: "E-Sports"
+      ESPORTS: "E-Sports",
+      FRISBEE: "Frisbee"
 };
 
 class Course {
@@ -120,16 +121,14 @@ class Course {
     addCategory(category){
         const validationResult = Course.checkCategory(category);
         if(validationResult instanceof NoConstraintViolation){
-            this._categories.push(categories[category]);
+            this._categories.push(category);
         } else{
           throw validationResult;
         }
     }
 
-    removeCategory(remCategories){
-      for(const i in remCategories){
-        console.log(i);
-      }
+    removeCategory(remCategory){
+      console.log(remCategory);
     }
 
     get price(){
@@ -146,9 +145,7 @@ class Course {
     }
 
     static checkPrice(price){
-      if(!price){
-        return new MandatoryValueConstraintViolation("A price must be provided");
-      } else if(!isIntegerOrIntegerString(price)){
+      if(!isIntegerOrIntegerString(price)){
         return new RangeConstraintViolation("The price must be an Integer");
       } else {
         return new NoConstraintViolation();
@@ -181,6 +178,25 @@ class Course {
 /********************************************************
  *** Class-level ("static") storage management methods ***
  *********************************************************/
+ /**
+  *  Conversion between a Book object and a corresponding Firestore document
+  */
+Course.converter = {
+  toFirestore: function (cCourse) {
+    const data = {
+      courseId: cCourse.classId,
+      courseName: cCourse.courseName,
+      categories: cCourse.categories,
+      description: cCourse.description
+    };
+    return data;
+  },
+  fromFirestore: function (snapshot, options) {
+    const data = snapshot.data( options);
+    return new Course( data);
+  },
+};
+
 Course.convert = function(course){
   let slots = {
     courseId: course.courseId,
@@ -231,18 +247,41 @@ Course.destroy = async function (courseId){
  *  Update a course
  */
 
- Course.update = async function({courseId, courseName, categories, price, description}){
+ Course.update = async function({courseId, courseName, addedCategories, removedCategories, price, description}){
    const courseCollRef = db.collection("courses"),
          courseDocRef = courseCollRef.doc( courseId);
    try {
      // Merge existing data with updated data
-     await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
-   } catch (e) {
-       console.error(`Error when updating course record: ${e}`);
-       return;
-   }
-   console.log(`Course record ${courseId} updated`);
+     const courseDocSn = await courseDocRef.withConverter(Course.converter).get();
+     const courseData = courseDocSn.data();
 
+     let categoryList = courseData.categories;
+     for(const i of addedCategories){
+       if(!categoryList.includes(i)){
+         categoryList.push(i);
+       }
+     }
+
+     for(const i of removedCategories){
+       const index = categoryList.findIndex(element => i === element);
+       console.log("index: " + index);
+
+       if(index > -1){
+         categoryList.splice(index, 1);
+       }
+     }
+     let course = new Course({courseId, courseName, categoryList, price, description});
+     console.log("hier");
+     console.log(categoryList);
+     console.log(courseData);
+
+      //await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
+      await courseDocRef.set({courseId: course.courseId, courseName: course.courseName, categories:categoryList, price: course.price, description: course.description}, {merge: true});
+  } catch (e) {
+    console.error(`Error when updating course record: ${e.message}`);
+    return;
+  }
+  console.log(`Course record ${courseId} updated`);
  }
 
 /**

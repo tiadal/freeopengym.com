@@ -1,3 +1,5 @@
+import {categories} from "../js/m/Course.mjs";
+
 /**
  * @fileOverview  Defines utility procedures/functions
  * @author Gerd Wagner
@@ -200,6 +202,104 @@ function createMultipleChoiceWidget(widgetContainerEl, selection, selectionRange
   fillMultipleChoiceWidgetWithOptions( selectEl, selectionRange, keyProp,
       {"displayProp": displayProp, "selection": selection});
 }
+
+/*******************************************************************************
+CUSTOM
+*******************************************************************************/
+
+function createMultipleChoiceWidgetWithEnum(widgetContainerEl, selection, selectionRange) {
+  var assocListEl = document.createElement("ul"),  // shows associated objects
+      selectEl = document.createElement("select"),
+      el = null;
+  // delete old contents
+  widgetContainerEl.innerHTML = "";
+  // create association list items from property values of associated objects
+  fillChoiceSetWithEnum( assocListEl, selection);
+  // event handler for removing an associated item from the association list
+  assocListEl.addEventListener( 'click', function (e) {
+    var listItemEl = null, listEl = null;
+    if (e.target.tagName === "BUTTON") {  // delete/undo button
+      listItemEl = e.target.parentNode;
+      listEl = listItemEl.parentNode;
+      if (listItemEl.classList.contains("removed")) {
+        // undoing a previous removal
+        listItemEl.classList.remove("removed");
+        // change button text
+        e.target.textContent = "✕";
+      } else if (listItemEl.classList.contains("added")) {
+        // removing an added item means moving it back to the selection range
+        listItemEl.parentNode.removeChild( listItemEl);
+        const optionEl = createOption( listItemEl.getAttribute("data-value"),
+            listItemEl.firstElementChild.textContent);
+        selectEl.add( optionEl);
+      } else {
+        // removing an ordinary item
+        listItemEl.classList.add("removed");
+        // change button text
+        e.target.textContent = "undo";
+      }
+    }
+  });
+  widgetContainerEl.appendChild( assocListEl);
+  el = document.createElement("div");
+  el.appendChild( selectEl);
+  el.appendChild( createPushButton("add"));
+  // event handler for adding an item from the selection list to the association list
+  selectEl.parentNode.addEventListener( 'click', function (e) {
+    var assocListEl = e.currentTarget.parentNode.firstElementChild,
+        selectEl = e.currentTarget.firstElementChild;
+    if (e.target.tagName === "BUTTON") {  // add button
+      if (selectEl.value) {
+        addItemToChoiceSet( assocListEl, selectEl.value,
+            selectEl.options[selectEl.selectedIndex].textContent, "added");
+        selectEl.remove( selectEl.selectedIndex);
+        selectEl.selectedIndex = 0;
+      }
+    }
+  });
+  widgetContainerEl.appendChild( el);
+  // create select options from selectionRange minus selection
+  fillMultipleChoiceWidgetWithEnumOptions( selectEl, selectionRange, selection);
+}
+
+function fillChoiceSetWithEnum( listEl, selection) {
+  var options = [], obj = null;
+  // delete old contents
+  listEl.innerHTML = "";
+  // create list items from object property values
+  for (const j of selection) {
+    addItemToChoiceSet( listEl, j, categories[j]);
+  }
+}
+
+function fillMultipleChoiceWidgetWithEnumOptions(selectEl, selectionRange, used) {
+  var options = [], obj = null, displayProp = "";
+  // delete old contents
+  selectEl.innerHTML = "";
+  // create "no selection yet" entry
+  selectEl.add( createOption(""," --- "));
+  // create option elements from object property values
+  console.log(used);
+  for (const i in categories) {
+    console.log(i);
+    if(!used.includes(i)){
+      selectEl.add(createOption(i, categories[i]));
+    }
+    // if invoked with a selection argument, only add options for objects
+    // that are not yet selected
+    //if (!optPar || !optPar.selection || !optPar.selection[options[i]]) {
+    //  obj = selectionRange[options[i]];
+    //  if (optPar && optPar.displayProp) displayProp = optPar.displayProp;
+    //  else displayProp = keyProp;
+    //  selectEl.add( createOption( obj[keyProp], obj[displayProp]));
+    //}
+  }
+}
+
+/*******************************************************************************
+CUSTOM
+*******************************************************************************/
+
 /**
  * Fill the select element of an Multiple Choice Widget with option elements created
  * from the selectionRange minus an optional selection set specified in optPar
@@ -334,4 +434,4 @@ function showProgressBar (status) {
 
 
 export { fillSelectWithOptions, fillSelectWithEnum, createListFromMap, createMultipleChoiceWidget,
-  cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar };
+  createMultipleChoiceWidgetWithEnum, cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar };
