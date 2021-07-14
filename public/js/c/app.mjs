@@ -6,44 +6,6 @@ import Class from "../m/Class.mjs";
  */
 //TODO generate data
 async function generateTestData() {
-    //try{
-    //  let courseInstances = [
-    //    {
-    //      courseId: 1,
-    //      courseName: "Yoga in black",
-    //      categories: ["YOGA"],
-    //      price: 42,
-    //      description: "Nighttime yoga course"
-    //    },
-    //    {
-    //      courseId: 2,
-    //      courseName: "Red Socks football",
-    //      categories: ["FOOTBALL"],
-    //      price: 0,
-    //      description: "Amateur football"
-    //    },
-    //    {
-    //      courseId: 3,
-    //      courseName: "Frisbee fun",
-    //      categories: ["FRISBEE"],
-    //      price: 42,
-    //      description: ""
-    //    },
-    //    {
-    //      courseId: 4,
-    //      courseName: "Mythic gamers",
-    //      categories: ["ESPORTS"],
-    //      price: 0,
-    //      description: "Searching for a partner for League of Legends duo queue. At least silver 5."
-    //    },
-    //  ];
-
-    //  await Promise.all(courseInstances.map(
-    //    courseRec => db.collection("courses").doc(courseRec.courseId.toString()).set(courseRec)
-    //  ));
-    //} catch(e){
-    //  console.log("Error: " + e);
-    //}
     try{
         console.log('Generating course data...');
         const response = await fetch("../../test-data/courses.json");

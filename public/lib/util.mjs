@@ -279,20 +279,10 @@ function fillMultipleChoiceWidgetWithEnumOptions(selectEl, selectionRange, used)
   // create "no selection yet" entry
   selectEl.add( createOption(""," --- "));
   // create option elements from object property values
-  console.log(used);
   for (const i in categories) {
-    console.log(i);
     if(!used.includes(i)){
       selectEl.add(createOption(i, categories[i]));
     }
-    // if invoked with a selection argument, only add options for objects
-    // that are not yet selected
-    //if (!optPar || !optPar.selection || !optPar.selection[options[i]]) {
-    //  obj = selectionRange[options[i]];
-    //  if (optPar && optPar.displayProp) displayProp = optPar.displayProp;
-    //  else displayProp = keyProp;
-    //  selectEl.add( createOption( obj[keyProp], obj[displayProp]));
-    //}
   }
 }
 

@@ -177,9 +177,6 @@ updateFormEl["commit"].addEventListener("click", async function () {
     }
   }
 
-  console.log(updateFormEl.courseName.value);
-  console.log(categoriesToAdd);
-  console.log(categoriesToRemove);
     const slots = {
         courseId: updateFormEl.courseId.value,
         courseName: updateFormEl.courseName.value,
@@ -206,7 +203,6 @@ updateFormEl["commit"].addEventListener("click", async function () {
 document.getElementById("delete").addEventListener("click", async function () {
   const delSelCourseEl = deleteFormEl.selectCourse;
   const courseInstances = await Course.retrieveAll();
-  console.log(courseInstances);
     // reset selection list (drop its previous contents)
     delSelCourseEl.innerHTML = "";
     // populate the selection list
@@ -265,21 +261,12 @@ async function handleCourseSelectChangeEvent() {
         selectUpdateCategoriesEl = updateFormEl.selectCategoriesWidget;
     const courseInstances = await Course.retrieveAll();
     const key = (parseInt(updSelCourseEl.value) - 1).toString();
-    console.log(courseInstances);
     if(key) {
         const course = courseInstances[key];
-        console.log(typeof(key));
-        console.log(key);
-        console.log(course);
-        console.log(updateFormEl);
-        console.log(course.categories);
         updateFormEl.courseId.value = course.courseId;
         updateFormEl.courseName.value = course.courseName;
-        //updateFormEl.courseCategory.value = course.categories;
         updateFormEl.coursePrice.value = course.price;
         updateFormEl.courseDescription.value = course.description;
-
-        let tmp = {};
 
         createMultipleChoiceWidgetWithEnum( selectCategoriesWidget, course.categories,
             categories);

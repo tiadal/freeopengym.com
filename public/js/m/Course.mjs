@@ -40,7 +40,6 @@ class Course {
     }
     //TODO next time: check
     set courseId(courseId){
-      console.log(courseId);
         const validationResult = Course.checkCourseId(courseId);
         if(validationResult instanceof NoConstraintViolation){
           this._courseId = courseId;
@@ -73,7 +72,7 @@ class Course {
           validationResult = new NoConstraintViolation();
         }
       }
-      
+
       return validationResult;
     }
 
@@ -129,7 +128,10 @@ class Course {
     }
 
     removeCategory(remCategory){
-      console.log(remCategory);
+      const index = this._categories.findIndex(i => i === remCategory);
+      if(index > -1){
+        this._categories.splice(index, 1);
+      }
     }
 
     get price(){
@@ -221,7 +223,6 @@ Course.add = async function (slots){
     const courseCollRef = db.collection("courses"),
           courseDocRef = courseCollRef.doc( slots.courseId.toString());
     try {
-      console.log(slots);
         let c = new Course(slots);
         let validationResult = await Course.checkCourseIdAsId(c.courseId);
         if(validationResult instanceof NoConstraintViolation){
@@ -267,16 +268,12 @@ Course.destroy = async function (courseId){
 
      for(const i of removedCategories){
        const index = categoryList.findIndex(element => i === element);
-       console.log("index: " + index);
 
        if(index > -1){
          categoryList.splice(index, 1);
        }
      }
      let course = new Course({courseId, courseName, categoryList, price, description});
-     console.log("hier");
-     console.log(categoryList);
-     console.log(courseData);
 
       //await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
       await courseDocRef.set({courseId: course.courseId, courseName: course.courseName, categories:categoryList, price: course.price, description: course.description}, {merge: true});
