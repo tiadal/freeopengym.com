@@ -56,19 +56,12 @@ document.getElementById("create").addEventListener("click",async function () {
 createFormEl.classId.addEventListener("input", function(){
     createFormEl.classId.setCustomValidity( Class.checkClassId( createFormEl.classId.value).message);
 });
-createFormEl.classId.addEventListener("input", function(){
-    createFormEl.classDate.setCustomValidity( Time.checkClassDate( createFormEl.classDate.value).message);
-});
-createFormEl.classId.addEventListener("input", function(){
-    createFormEl.startTime.setCustomValidity( Time.checkStartTime( createFormEl.startTime.value).message);
-});
-createFormEl.classId.addEventListener("input", function(){
-    createFormEl.endTime.setCustomValidity( Time.checkEndTime( createFormEl.endTime.value).message);
+createFormEl.endTime.addEventListener("input",function(){
+    createFormEl.endTime.setCustomValidity( Time.checkTimes( createFormEl.startTime.value, createFormEl.endTime.value).message);
 });
 createFormEl.classLocation.addEventListener("input", function(){
     createFormEl.classLocation.setCustomValidity( Class.checkLocation( createFormEl.classLocation.value).message);
 });
-
 // handle Save button click events
 createFormEl["commit"].addEventListener("click", async function () {
     let time = new Time({
@@ -84,10 +77,11 @@ createFormEl["commit"].addEventListener("click", async function () {
     };
     showProgressBar( "show");
     createFormEl.classId.setCustomValidity(( await Class.checkClassIdAsId( slots.classId)).message);
-    createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classDate).message);
-    createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.startTime).message);
-    createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.endTime).message);
+    createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classTime[0]).message);
+    createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.classTime[1]).message);
+    createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.classTime[2]).message);
     createFormEl.classLocation.setCustomValidity( Class.checkLocation( slots.classLocation).message);
+    createFormEl.classLocation.setCustomValidity( Class.checkLocation( createFormEl.classLocation.value).message);
 
     if (createFormEl.checkValidity()) {
         await Class.add( slots);
