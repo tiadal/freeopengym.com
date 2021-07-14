@@ -40,9 +40,14 @@ document.getElementById("retrieveAndListAll")
     for (const key of Object.keys( courseInstances)) {
         const course = courseInstances[key];
         const row = tableBodyEl.insertRow();
+        let categoryList = [];
+        for(const i of course.categories){
+          categoryList.push(categories[i]);
+        }
+
         row.insertCell().textContent = course.courseId;
         row.insertCell().textContent = course.courseName;
-        row.insertCell().textContent = course.categories;
+        row.insertCell().textContent = categoryList;
         row.insertCell().textContent = course.price;
 
         document.getElementById("courseTable").rows[index].addEventListener("click", function() {
