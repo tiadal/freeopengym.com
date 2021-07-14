@@ -19,7 +19,8 @@ const categories = {
       INDOOR: "Indoor",
       RUNNING: "Running",
       TEAM: "Team",
-      ESPORTS: "E-Sports"
+      ESPORTS: "E-Sports",
+      FRISBEE: "Frisbee"
 };
 
 class Course {
@@ -120,16 +121,14 @@ class Course {
     addCategory(category){
         const validationResult = Course.checkCategory(category);
         if(validationResult instanceof NoConstraintViolation){
-            this._categories.push(categories[category]);
+            this._categories.push(category);
         } else{
           throw validationResult;
         }
     }
 
-    removeCategory(remCategories){
-      for(const i in remCategories){
-        console.log(i);
-      }
+    removeCategory(remCategory){
+      console.log(remCategory);
     }
 
     get price(){
@@ -231,7 +230,7 @@ Course.destroy = async function (courseId){
  *  Update a course
  */
 
- Course.update = async function({courseId, courseName, categories, price, description}){
+ Course.update = async function({courseId, courseName, addedCategories, removedCategories, price, description}){
    const courseCollRef = db.collection("courses"),
          courseDocRef = courseCollRef.doc( courseId);
    try {

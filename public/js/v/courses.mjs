@@ -2,7 +2,7 @@
  Import classes, datatypes and utility procedures
  ***************************************************************/
 import {Course, categories} from "../m/Course.mjs";
-import {fillSelectWithOptions, fillSelectWithEnum} from "../../lib/util.mjs";
+import {fillSelectWithOptions, fillSelectWithEnum, createMultipleChoiceWidgetWithEnum} from "../../lib/util.mjs";
 
 /***************************************************************
  Set up general, use-case-independent UI elements
@@ -101,10 +101,12 @@ createFormEl["commit"].addEventListener("click", async function () {
  Use case Update Course
  **********************************************/
 const updateFormEl = document.querySelector("section#Course-U > form");
+const updSelCategoriesEl = updateFormEl.selectCategories;
 const updSelCourseEl = updateFormEl.selectCourse;
 document.getElementById("update").addEventListener("click",async function () {
   const courseInstances = await Course.retrieveAll();
   updSelCourseEl.innerHTML = "";
+  //fillSelectWithEnum( updSelCategoriesEl, categories);
   fillSelectWithOptions( updSelCourseEl, courseInstances,
       "courseId", {displayProp:"courseName"});
     document.getElementById("Course-M").style.display = "none";
@@ -117,10 +119,28 @@ updSelCourseEl.addEventListener("change", await handleCourseSelectChangeEvent);
 
 // handle Save button click events
 updateFormEl["commit"].addEventListener("click", async function () {
+  const categoriesToAdd = [], categoriesToRemove = [];
+  const updSelCategoriesEl = updateFormEl.querySelector(".MultiChoiceWidget");
+  const multiChoiceListEl = updSelCategoriesEl.firstElementChild;
+
+  console.log(updSelCategoriesEl);
+
+  for (const mcListItemEl of multiChoiceListEl.children) {
+    if (mcListItemEl.classList.contains("removed")) {
+      categoriesToRemove.push( mcListItemEl.getAttribute("data-value"));
+    }
+    if (mcListItemEl.classList.contains("added")) {
+      categoriesToAdd.push( mcListItemEl.getAttribute("data-value"));
+    }
+  }
+
+  console.log(categoriesToAdd);
+  console.log(categoriesToRemove);
     const slots = {
         courseId: updateFormEl.courseId.value,
         courseName: updateFormEl.courseName.value,
-        categories: updateFormEl.courseCategory.value,
+        addedCategories: categoriesToAdd,
+        removedCategories: categoriesToRemove,
         price: updateFormEl.coursePrice.value,
         description: updateFormEl.courseDescription.value
     };
@@ -142,6 +162,9 @@ document.getElementById("delete").addEventListener("click", async function () {
     // populate the selection list
     fillSelectWithOptions( delSelCourseEl, courseInstances,
         "courseId", {displayProp:"courseName"});
+
+    createMultipleChoiceWidgetWithEnum( selectCategoriesWidget, [],
+        []);
     document.getElementById("Course-M").style.display = "none";
     document.getElementById("Course-D").style.display = "block";
     deleteFormEl.reset();
@@ -188,7 +211,8 @@ function refreshManageDataUI() {
 async function handleCourseSelectChangeEvent() {
     const updateFormEl = document.querySelector("section#Course-U > form"),
         saveButton = updateFormEl.commit,
-        selectUpdateAgentEl = updateFormEl.selectAgent;
+        selectUpdateAgentEl = updateFormEl.selectAgent,
+        selectUpdateCategoriesEl = updateFormEl.selectCategoriesWidget;
     const courseInstances = await Course.retrieveAll();
     const key = (parseInt(updSelCourseEl.value) - 1).toString();
     console.log(courseInstances);
@@ -201,9 +225,14 @@ async function handleCourseSelectChangeEvent() {
         console.log(course.categories);
         updateFormEl.courseId.value = course.courseId;
         updateFormEl.courseName.value = course.courseName;
-        updateFormEl.courseCategory.value = course.categories;
+        //updateFormEl.courseCategory.value = course.categories;
         updateFormEl.coursePrice.value = course.price;
         updateFormEl.courseDescription.value = course.description;
+
+        let tmp = {};
+
+        createMultipleChoiceWidgetWithEnum( selectCategoriesWidget, course.categories,
+            categories);
 
         saveButton.disabled = false;
     } else {
