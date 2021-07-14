@@ -147,6 +147,8 @@ class Course {
     static checkPrice(price){
       if(!isIntegerOrIntegerString(price)){
         return new RangeConstraintViolation("The price must be an Integer");
+      } else if(parseInt(price) < 0){
+        return new RangeConstraintViolation("The price cannot be negative");
       } else {
         return new NoConstraintViolation();
       }
