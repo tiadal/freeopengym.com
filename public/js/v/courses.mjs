@@ -102,29 +102,23 @@ createFormEl["commit"].addEventListener("click", async function () {
       selCategories.push(i.value);
     }
 
-    //createFormEl.classId.setCustomValidity(( await Class.checkClassIdAsId( slots.classId)).message);
-
-    //createFormEl.courseId.addEventListener("input", async function () {
-    createFormEl.courseId.setCustomValidity((await Course.checkCourseIdAsId( createFormEl.courseId.value)).message);
-    //});
 
     createFormEl.courseName.setCustomValidity(Course.checkCourseName( createFormEl.courseName.value).message);
 
-    //createFormEl.price.addEventListener("input", function () {
     createFormEl.price.setCustomValidity(Course.checkPrice( createFormEl.price.value).message);
-    //});
 
-    console.log(selCategories)
-    const slots = {
-        courseId: parseInt(createFormEl.courseId.value),
-        courseName: createFormEl.courseName.value,
-        categories: selCategories,
-        price: createFormEl.price.value,
-        description: createFormEl.description.value
-    };
+    createFormEl.courseId.setCustomValidity(Course.checkCourseId( createFormEl.courseId.value).message);
 
     if(createFormEl.checkValidity()){
+      const slots = {
+          courseId: parseInt(createFormEl.courseId.value),
+          courseName: createFormEl.courseName.value,
+          categories: selCategories,
+          price: createFormEl.price.value,
+          description: createFormEl.description.value
+      };
       await Course.add( slots);
+      createFormEl.reset();
     }
 });
 
