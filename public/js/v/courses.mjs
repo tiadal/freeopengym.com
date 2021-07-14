@@ -102,21 +102,21 @@ createFormEl["commit"].addEventListener("click", async function () {
       selCategories.push(i.value);
     }
 
+    const slots = {
+        courseId: parseInt(createFormEl.courseId.value),
+        courseName: createFormEl.courseName.value,
+        categories: selCategories,
+        price: createFormEl.price.value,
+        description: createFormEl.description.value
+    };
 
-    createFormEl.courseName.setCustomValidity(Course.checkCourseName( createFormEl.courseName.value).message);
+    createFormEl.courseName.setCustomValidity(Course.checkCourseName( slots.courseName).message);
 
-    createFormEl.price.setCustomValidity(Course.checkPrice( createFormEl.price.value).message);
+    createFormEl.price.setCustomValidity(Course.checkPrice( slots.price).message);
 
-    createFormEl.courseId.setCustomValidity(Course.checkCourseId( createFormEl.courseId.value).message);
+    createFormEl.courseId.setCustomValidity((await Course.checkCourseIdAsId( slots.courseId)).message);
 
     if(createFormEl.checkValidity()){
-      const slots = {
-          courseId: parseInt(createFormEl.courseId.value),
-          courseName: createFormEl.courseName.value,
-          categories: selCategories,
-          price: createFormEl.price.value,
-          description: createFormEl.description.value
-      };
       await Course.add( slots);
       createFormEl.reset();
     }
