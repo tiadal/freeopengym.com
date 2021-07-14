@@ -123,8 +123,6 @@ updateFormEl["commit"].addEventListener("click", async function () {
   const updSelCategoriesEl = updateFormEl.querySelector(".MultiChoiceWidget");
   const multiChoiceListEl = updSelCategoriesEl.firstElementChild;
 
-  console.log(updSelCategoriesEl);
-
   for (const mcListItemEl of multiChoiceListEl.children) {
     if (mcListItemEl.classList.contains("removed")) {
       categoriesToRemove.push( mcListItemEl.getAttribute("data-value"));
@@ -134,6 +132,7 @@ updateFormEl["commit"].addEventListener("click", async function () {
     }
   }
 
+  console.log(updateFormEl.courseName.value);
   console.log(categoriesToAdd);
   console.log(categoriesToRemove);
     const slots = {
@@ -144,6 +143,7 @@ updateFormEl["commit"].addEventListener("click", async function () {
         price: updateFormEl.coursePrice.value,
         description: updateFormEl.courseDescription.value
     };
+    console.log(slots);
     await Course.update( slots);
 });
 

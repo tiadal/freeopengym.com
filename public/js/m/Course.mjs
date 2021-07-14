@@ -178,6 +178,25 @@ class Course {
 /********************************************************
  *** Class-level ("static") storage management methods ***
  *********************************************************/
+ /**
+  *  Conversion between a Book object and a corresponding Firestore document
+  */
+Course.converter = {
+  toFirestore: function (cCourse) {
+    const data = {
+      courseId: cCourse.classId,
+      courseName: cCourse.courseName,
+      categories: cCourse.categories,
+      description: cCourse.description
+    };
+    return data;
+  },
+  fromFirestore: function (snapshot, options) {
+    const data = snapshot.data( options);
+    return new Course( data);
+  },
+};
+
 Course.convert = function(course){
   let slots = {
     courseId: course.courseId,
@@ -233,17 +252,10 @@ Course.destroy = async function (courseId){
          courseDocRef = courseCollRef.doc( courseId);
    try {
      // Merge existing data with updated data
-     const courseData = await courseDocRef.get().then((doc) => {
-       if (doc.exists) {
-         return doc.data();
-       } else {
-         // doc.data() will be undefined in this case
-         console.log("No such document!");
-         return null;
-       }
-     });
-     let course = new Course(courseData);
-     let categoryList = course.categories;
+     const courseDocSn = await courseDocRef.withConverter(Course.converter).get();
+     const courseData = courseDocSn.data();
+
+     let categoryList = courseData.categories;
      for(const i of addedCategories){
        if(!categoryList.includes(i)){
          categoryList.push(i);
@@ -258,18 +270,18 @@ Course.destroy = async function (courseId){
          categoryList.splice(index, 1);
        }
      }
+     let course = new Course({courseId, courseName, categoryList, price, description});
      console.log("hier");
      console.log(categoryList);
      console.log(courseData);
 
-     //await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
-     await courseDocRef.set({courseId: course.courseId, courseName: course.courseName, categories:categoryList, price: course.price, description: course.description}, {merge: true});
-   } catch (e) {
-       console.error(`Error when updating course record: ${e.message}`);
-       return;
-   }
-   console.log(`Course record ${courseId} updated`);
-
+      //await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
+      await courseDocRef.set({courseId: course.courseId, courseName: course.courseName, categories:categoryList, price: course.price, description: course.description}, {merge: true});
+  } catch (e) {
+    console.error(`Error when updating course record: ${e.message}`);
+    return;
+  }
+  console.log(`Course record ${courseId} updated`);
  }
 
 /**
