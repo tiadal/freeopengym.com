@@ -145,9 +145,7 @@ class Course {
     }
 
     static checkPrice(price){
-      if(!price){
-        return new MandatoryValueConstraintViolation("A price must be provided");
-      } else if(!isIntegerOrIntegerString(price)){
+      if(!isIntegerOrIntegerString(price)){
         return new RangeConstraintViolation("The price must be an Integer");
       } else {
         return new NoConstraintViolation();
@@ -235,9 +233,39 @@ Course.destroy = async function (courseId){
          courseDocRef = courseCollRef.doc( courseId);
    try {
      // Merge existing data with updated data
-     await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
+     const courseData = await courseDocRef.get().then((doc) => {
+       if (doc.exists) {
+         return doc.data();
+       } else {
+         // doc.data() will be undefined in this case
+         console.log("No such document!");
+         return null;
+       }
+     });
+     let course = new Course(courseData);
+     let categoryList = course.categories;
+     for(const i of addedCategories){
+       if(!categoryList.includes(i)){
+         categoryList.push(i);
+       }
+     }
+
+     for(const i of removedCategories){
+       const index = categoryList.findIndex(element => i === element);
+       console.log("index: " + index);
+
+       if(index > -1){
+         categoryList.splice(index, 1);
+       }
+     }
+     console.log("hier");
+     console.log(categoryList);
+     console.log(courseData);
+
+     //await courseDocRef.set({courseId, courseName, categories, price, description}, {merge: true});
+     await courseDocRef.set({courseId: course.courseId, courseName: course.courseName, categories:categoryList, price: course.price, description: course.description}, {merge: true});
    } catch (e) {
-       console.error(`Error when updating course record: ${e}`);
+       console.error(`Error when updating course record: ${e.message}`);
        return;
    }
    console.log(`Course record ${courseId} updated`);
