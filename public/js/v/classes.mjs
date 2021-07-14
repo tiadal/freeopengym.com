@@ -34,26 +34,13 @@ document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
         document.getElementById("Class-M").style.display = "none";
         document.getElementById("Class-R").style.display = "block";
-        const tableBodyEl = document.querySelector("section#Class-R>div>table>tbody");
         const selectOrderEl = document.querySelector("section#Class-R>div>div>label>select");
-        tableBodyEl.innerHTML = "";  // drop old content
-        //const classInstances = await Class.retrieveAll();
-        await renderList("classId",tableBodyEl);
+
+        await renderList("classId");
         selectOrderEl.addEventListener("change", async function (e) {
             // invoke list with order selected
             await renderList( e.target.value);
         });
-
-    /*    for (const key of Object.keys( classInstances)) {
-            const cClass = classInstances[key];
-            const row = tableBodyEl.insertRow();
-            let timeArray = cClass.classTime;
-            let timesStr = `${timeArray[0]}: ${timeArray[1]}-${timeArray[2]}`;
-
-            row.insertCell().textContent = cClass.classId;
-            row.insertCell().textContent = timesStr;
-            row.insertCell().textContent = cClass.classLocation;
-        }*/
     });
 
 /**********************************************
@@ -138,12 +125,19 @@ updateFormEl["commit"].addEventListener("click", async function () {
     console.log(timeValues);
     const slots = {
         classId: updateFormEl.classId.value,
-        //TODO: courseId should not change (displayed as course Name)
-        courseId: 1,
         classTime: timeValues,
         classLocation: updateFormEl.classLocation.value
     };
-    await Class.update( slots);
+    updateFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classDate).message);
+    updateFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.startTime).message);
+    updateFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.endTime).message);
+    updateFormEl.classLocation.setCustomValidity( Class.checkLocation( slots.classLocation).message);
+    if (updateFormEl.checkValidity()) {
+        await Class.update(slots);
+        // update the selection list option
+        updSelClassEl.options[updSelClassEl.selectedIndex].text = slots.classTime;
+        await updateFormEl.reset();
+    }
 });
 
 
@@ -227,7 +221,10 @@ async function handleClassSelectChangeEvent() {
     }
 }
 
-async function renderList( order, tableBodyEl) {
+async function renderList( order) {
+    const tableBodyEl = document.querySelector("section#Class-R>div>table>tbody");
+    tableBodyEl.innerHTML = "";  // drop old content
+
     showProgressBar( "show");
     // load all book records using order param
     const classRecords = await Class.retrieveAll( order);
