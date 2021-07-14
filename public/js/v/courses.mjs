@@ -59,7 +59,7 @@ document.getElementById("retrieveAndListAll")
 
             retrieveOneFormEl.courseId.value = course.courseId;
             retrieveOneFormEl.courseName.value = course.courseName;
-            retrieveOneFormEl.categories.value = course.categories;
+            retrieveOneFormEl.categories.value = categoryList;//course.categories;
             retrieveOneFormEl.price.value = course.price;
             retrieveOneFormEl.description.value = course.description;
 

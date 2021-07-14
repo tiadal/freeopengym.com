@@ -35,5 +35,32 @@ service cloud.firestore {
       // validate when delete class record
       allow delete: if request.auth.token.email_verified == true;
     }
+
+    match /{courses}/{document=**} {
+      /** RULES FOR allow read WITH CONVENIENCE METHOD - LOW GRANULARITY **/
+      /** NO authentication required **/
+      allow read: if request.auth != null;
+
+      /** RULES FOR allow write WITH STANDARD METHODS - HIGH GRANULARITY **/
+      /** authentication required **/
+      //validate when create new course record
+      allow create: if request.auth.token.email_verified == true
+                       && checkCourseIdAsId( request.resource.data.courseId) == true
+                       && checkClassId( request.resource.data.courseId) == true
+		       && request.resource.data.courseName != null
+                       && request.resource.data.categories != null
+                       && request.resource.data.price != null;
+
+      // validate when update class record
+      allow update: if request.auth.token.email_verified == true
+                       && (request.resource.data.diff( resource.data).affectedKeys()
+                           .hasOnly(['courseName', 'price', 'categories']))
+                       && request.resource.data.courseName != null
+                       && request.resource.data.categories != null;
+		       && request.resource.data.price != null
+
+      // validate when delete class record
+      allow delete: if request.auth.token.email_verified == true;
+    }
   }
 }
