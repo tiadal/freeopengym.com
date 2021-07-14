@@ -78,9 +78,10 @@ document.getElementById("create").addEventListener("click",async function () {
     createFormEl.reset();
 });
 
-createFormEl.courseId.addEventListener("input", function () {
+createFormEl.courseId.addEventListener("input", async function() {
   createFormEl.courseId.setCustomValidity(
-      Course.checkCourseId( createFormEl.courseId.value).message);
+      (await Course.checkCourseIdAsId( createFormEl.courseId.value)).message
+  );
 });
 
 createFormEl.courseName.addEventListener("input", function () {
@@ -101,20 +102,17 @@ createFormEl["commit"].addEventListener("click", async function () {
       selCategories.push(i.value);
     }
 
-    createFormEl.courseId.addEventListener("input", function () {
-      createFormEl.courseId.setCustomValidity(
-          Course.checkCourseId( createFormEl.courseId.value).message);
-    });
+    //createFormEl.classId.setCustomValidity(( await Class.checkClassIdAsId( slots.classId)).message);
 
-    createFormEl.courseName.addEventListener("input", function () {
-      createFormEl.courseName.setCustomValidity(
-          Course.checkCourseName( createFormEl.courseName.value).message);
-    });
+    //createFormEl.courseId.addEventListener("input", async function () {
+    createFormEl.courseId.setCustomValidity((await Course.checkCourseIdAsId( createFormEl.courseId.value)).message);
+    //});
 
-    createFormEl.price.addEventListener("input", function () {
-      createFormEl.price.setCustomValidity(
-          Course.checkPrice( createFormEl.price.value).message);
-    });
+    createFormEl.courseName.setCustomValidity(Course.checkCourseName( createFormEl.courseName.value).message);
+
+    //createFormEl.price.addEventListener("input", function () {
+    createFormEl.price.setCustomValidity(Course.checkPrice( createFormEl.price.value).message);
+    //});
 
     console.log(selCategories)
     const slots = {
@@ -192,20 +190,8 @@ updateFormEl["commit"].addEventListener("click", async function () {
         description: updateFormEl.courseDescription.value
     };
 
-    updateFormEl.courseId.addEventListener("input", function () {
-      updateFormEl.courseId.setCustomValidity(
-          Course.checkCourseId( updateFormEl.courseId.value).message);
-    });
-
-    updateFormEl.courseName.addEventListener("input", function () {
-      updateFormEl.courseName.setCustomValidity(
-          Course.checkCourseName( updateFormEl.courseName.value).message);
-    });
-
-    updateFormEl.coursePrice.addEventListener("input", function () {
-      updateFormEl.coursePrice.setCustomValidity(
-          Course.checkPrice( updateFormEl.coursePrice.value).message);
-    });
+    updateFormEl.courseName.setCustomValidity(Course.checkCourseName( updateFormEl.courseName.value).message);
+    updateFormEl.coursePrice.setCustomValidity(Course.checkPrice( updateFormEl.coursePrice.value).message);
 
     if(updateFormEl.checkValidity()){
       await Course.update( slots);

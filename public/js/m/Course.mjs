@@ -73,6 +73,7 @@ class Course {
           validationResult = new NoConstraintViolation();
         }
       }
+      
       return validationResult;
     }
 
