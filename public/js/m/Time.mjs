@@ -17,9 +17,7 @@ class Time {
     get classDate(){
         return this._date;
     }
-    //TODO
     static checkClassDate( date) {
-        console.log(date);
         if (!date){
             return new MandatoryValueConstraintViolation("There must be a date given.");
         } else if (date < new Date().toISOString().slice(0, 10)){
@@ -27,16 +25,6 @@ class Time {
         } else {
             return new NoConstraintViolation();
         }
-        /*if (date < new Date().toISOString().slice(0, 10)){
-
-            return new RangeConstraintViolation("The date must be bigger than today!");
-        }
-        console.log(new Date().toISOString().slice(0, 10));
-        console.log(typeof date);
-        console.log(date);
-        console.log(typeof new Date().toISOString().slice(0, 10));
-        console.log("smaller " + new Date().toISOString().slice(0, 10) > date);
-        console.log("bigger " + new Date().toISOString().slice(0, 10) < date);*/
     };
     set classDate(date){
         const validationResult = Time.checkClassDate( date);
@@ -49,7 +37,6 @@ class Time {
     get startTime(){
         return this._startTime;
     }
-    //TODO: check
     static checkStartTime( sT) {
         if (!sT){
             return new MandatoryValueConstraintViolation("There start time of the class must be given.");

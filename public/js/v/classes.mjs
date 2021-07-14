@@ -52,7 +52,6 @@ document.getElementById("create").addEventListener("click",async function () {
     document.getElementById("Class-C").style.display = "block";
     createFormEl.reset();
 });
-
 createFormEl.classId.addEventListener("input", function(){
     createFormEl.classId.setCustomValidity( Class.checkClassId( createFormEl.classId.value).message);
 });
@@ -80,8 +79,8 @@ createFormEl["commit"].addEventListener("click", async function () {
     createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classTime[0]).message);
     createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.classTime[1]).message);
     createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.classTime[2]).message);
+    createFormEl.endTime.setCustomValidity( Time.checkTimes( slots.classTime[1], slots.classTime[2]).message);
     createFormEl.classLocation.setCustomValidity( Class.checkLocation( slots.classLocation).message);
-    createFormEl.classLocation.setCustomValidity( Class.checkLocation( createFormEl.classLocation.value).message);
 
     if (createFormEl.checkValidity()) {
         await Class.add( slots);
@@ -95,6 +94,7 @@ createFormEl["commit"].addEventListener("click", async function () {
  **********************************************/
 const updateFormEl = document.querySelector("section#Class-U > form");
 const updSelClassEl = updateFormEl.selectClass;
+const endTime = document.getElementById("updateETime").value;
 document.getElementById("update").addEventListener("click",async function () {
     const classInstances = await Class.retrieveAll();
     updSelClassEl.innerHTML = "";
@@ -122,9 +122,10 @@ updateFormEl["commit"].addEventListener("click", async function () {
         classTime: timeValues,
         classLocation: updateFormEl.classLocation.value
     };
-    updateFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classDate).message);
-    updateFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.startTime).message);
-    updateFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.endTime).message);
+    createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classTime[0]).message);
+    createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.classTime[1]).message);
+    createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.classTime[2]).message);
+    createFormEl.endTime.setCustomValidity( Time.checkTimes( slots.classTime[1], slots.classTime[2]).message);
     updateFormEl.classLocation.setCustomValidity( Class.checkLocation( slots.classLocation).message);
     if (updateFormEl.checkValidity()) {
         await Class.update(slots);
