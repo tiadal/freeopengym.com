@@ -12,10 +12,12 @@ import {NoConstraintViolation, MandatoryValueConstraintViolation,
 import Time from "./Time.mjs";
 
 class Class {
-    constructor({classId, classTime, classLocation}) {
+    constructor({classId, classTime, classLocation, courseId}) {
         this.classId = classId;
         this.classTime = classTime;
         this.classLocation = classLocation;
+
+        this.courseId = courseId;
     }
     get classId(){
         return this._classId;
@@ -102,6 +104,21 @@ class Class {
             this._classLocation = location;
         } else {
             throw validationResult;
+        }
+    }
+    get courseId(){
+        return this._courseId;
+    }
+    //TODO
+    static checkCourseId(courseId){
+        return NoConstraintViolation;
+    }
+    set courseId(courseId){
+        const validationResult = Class.checkCourseId( courseId);
+        if (validationResult instanceof NoConstraintViolation){
+            this._courseId = courseId;
+        } else {
+            throw validationResult
         }
     }
 
