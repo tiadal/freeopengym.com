@@ -5,6 +5,7 @@
 * slots - Object creation slots.
 */
 import {isIntegerOrIntegerString, isNonEmptyString} from "../../lib/util.mjs";
+import {Course} from "./Course.mjs";
 import {NoConstraintViolation, MandatoryValueConstraintViolation,
     RangeConstraintViolation, PatternConstraintViolation, UniquenessConstraintViolation,
     IntervalConstraintViolation, ReferentialIntegrityConstraintViolation}
@@ -12,10 +13,12 @@ import {NoConstraintViolation, MandatoryValueConstraintViolation,
 import Time from "./Time.mjs";
 
 class Class {
-    constructor({classId, classTime, classLocation}) {
+    constructor({classId, classTime, classLocation, courseId}) {
         this.classId = classId;
         this.classTime = classTime;
         this.classLocation = classLocation;
+
+        this.courseId = courseId;
     }
     get classId(){
         return this._classId;
@@ -104,6 +107,30 @@ class Class {
             throw validationResult;
         }
     }
+    get courseId(){
+        return this._courseId;
+    }
+
+    static async checkCourseId(courseId){
+       let validationResult = null;
+        if (!courseId) {
+            validationResult = new NoConstraintViolation();  // optional
+        } else {
+            // invoke foreign key constraint check
+            validationResult = await Course.checkCourseIdAsIdRef(courseId);
+        }
+        return validationResult;
+    }
+    //TODO
+    set courseId(courseId){
+        //const validationResult = Class.checkCourseId( courseId);
+        let validationResult = new NoConstraintViolation();
+        if (validationResult instanceof NoConstraintViolation){
+            this._courseId = courseId;
+        } else {
+            throw validationResult
+        }
+    }
 
     // Serialize class object
     toString() {
@@ -124,7 +151,8 @@ Class.converter = {
         const data = {
             classId: cClass.classId,
             classTime: cClass.classTime,
-            classLocation: cClass.classLocation
+            classLocation: cClass.classLocation,
+            courseId: cClass.courseId
         };
         return data;
     },
