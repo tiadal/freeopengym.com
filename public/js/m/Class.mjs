@@ -5,6 +5,7 @@
 * slots - Object creation slots.
 */
 import {isIntegerOrIntegerString, isNonEmptyString} from "../../lib/util.mjs";
+import {Course} from "./Course.mjs";
 import {NoConstraintViolation, MandatoryValueConstraintViolation,
     RangeConstraintViolation, PatternConstraintViolation, UniquenessConstraintViolation,
     IntervalConstraintViolation, ReferentialIntegrityConstraintViolation}
@@ -109,12 +110,21 @@ class Class {
     get courseId(){
         return this._courseId;
     }
-    //TODO
-    static checkCourseId(courseId){
-        return NoConstraintViolation;
+
+    static async checkCourseId(courseId){
+       let validationResult = null;
+        if (!courseId) {
+            validationResult = new NoConstraintViolation();  // optional
+        } else {
+            // invoke foreign key constraint check
+            validationResult = await Course.checkCourseIdAsIdRef(courseId);
+        }
+        return validationResult;
     }
+    //TODO
     set courseId(courseId){
-        const validationResult = Class.checkCourseId( courseId);
+        //const validationResult = Class.checkCourseId( courseId);
+        let validationResult = new NoConstraintViolation();
         if (validationResult instanceof NoConstraintViolation){
             this._courseId = courseId;
         } else {
@@ -141,7 +151,8 @@ Class.converter = {
         const data = {
             classId: cClass.classId,
             classTime: cClass.classTime,
-            classLocation: cClass.classLocation
+            classLocation: cClass.classLocation,
+            courseId: cClass.courseId
         };
         return data;
     },

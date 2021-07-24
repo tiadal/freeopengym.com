@@ -35,11 +35,9 @@ setupUiByUserStatus = function () {
 
           // enable buttons
           const manageCourseEl = document.getElementById("manageCourses");
-          const manageClassEl = document.getElementById("manageClasses");
           const genTestDataEl = document.getElementById("testData");
           const clearDataEl = document.getElementById("clearData");
           manageCourseEl.disabled = false;
-          manageClassEl.disabled = false;
           genTestDataEl.disabled = false;
           clearDataEl.disabled = false;
           console.log(`Authenticated as 'registered with ${user.emailVerified ? '' : 'NO '}verified account' (${user.email})`);

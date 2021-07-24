@@ -1,26 +1,26 @@
 [
   {
     "classId": 1,
-    "courseId": 1,
     "classTime": ["2021-10-11", "22:00", "23:00"],
-    "classLocation": "Some dark alley."
+    "classLocation": "Some dark alley.",
+    "courseId": 1
   },
   {
     "classId": 2,
-    "courseId": 2,
     "classTime": ["2021-12-12", "10:00", "13:00"],
-    "classLocation": "Middle of the woods."
+    "classLocation": "Middle of the woods.",
+    "courseId": 2
   },
   {
     "classId": 3,
-    "courseId": 3,
     "classTime": ["2021-05-29", "17:00", "17:30"],
-    "classLocation": "Neverland: Captain's Hook ship."
+    "classLocation": "Neverland: Captain Hook's ship.",
+    "courseId": 3
   },
   {
     "classId": 4,
-    "courseId": 4,
     "classTime": ["2021-08-08", "12:00", "13:00"],
-    "classLocation": "In front of saloon."
+    "classLocation": "In a galaxy far, far away....",
+    "courseId": 4
   }
 ]

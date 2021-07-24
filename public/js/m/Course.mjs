@@ -20,7 +20,8 @@ const categories = {
       RUNNING: "Running",
       TEAM: "Team",
       ESPORTS: "E-Sports",
-      FRISBEE: "Frisbee"
+      FRISBEE: "Frisbee",
+      OTHER: "Other"
 };
 
 class Course {
@@ -38,7 +39,6 @@ class Course {
     get courseId(){
         return this._courseId;
     }
-    //TODO next time: check
     set courseId(courseId){
         const validationResult = Course.checkCourseId(courseId);
         if(validationResult instanceof NoConstraintViolation){
@@ -76,10 +76,22 @@ class Course {
       return validationResult;
     }
 
+    static async checkCourseIdAsIdRef( courseId) {
+        let validationResult = Course.checkCourseId( courseId);
+        if ((validationResult instanceof NoConstraintViolation) && courseId) {
+            let publisherDocSn = await db.collection("courses").doc( courseId.toString()).get();
+            if (!publisherDocSn.exists) {
+                validationResult = new ReferentialIntegrityConstraintViolation(
+                    "There is no course record with this id!");
+            }
+        }
+        return validationResult;
+    };
+
     get courseName(){
         return this._courseName;
     }
-    //TODO next time: check
+
     set courseName(courseName){
       const validationResult = Course.checkCourseName(courseName);
       if(validationResult instanceof NoConstraintViolation){
@@ -100,7 +112,7 @@ class Course {
     get categories(){
         return this._categories;
     }
-    //TODO next time: check
+
     set categories(categories){
         this._categories = [];
         if(Array.isArray(categories)){
@@ -137,7 +149,7 @@ class Course {
     get price(){
         return this._price;
     }
-    //TODO next time: check
+
     set price(price){
         const validationResult = Course.checkPrice(price);
         if(validationResult instanceof NoConstraintViolation){
@@ -162,7 +174,7 @@ class Course {
             return this._description;
         }
     }
-    //TODO next time: check
+
     set description(description){
         // Save memory if there is an empty string as description
         if(isNonEmptyString(description)){
@@ -224,12 +236,11 @@ Course.add = async function (slots){
           courseDocRef = courseCollRef.doc( slots.courseId.toString());
     try {
         let c = new Course(slots);
-        let validationResult = await Course.checkCourseIdAsId(c.courseId);
-        if(validationResult instanceof NoConstraintViolation){
-          await courseDocRef.set(Course.convert(c));
-        } else {
-          throw validationResult;
-        }
+        let validationResult = await Course.checkCourseIdAsId( c.courseId);
+        if(!validationResult instanceof NoConstraintViolation) throw validationResult;
+        validationResult = await Course.checkCourseIdAsIdRef( c.courseId);
+        if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+        await courseDocRef.set(Course.convert( c));
     } catch (e) {
         console.error(`Error when adding course record: ${e.message}`);
         return;
@@ -241,7 +252,20 @@ Course.add = async function (slots){
  */
 Course.destroy = async function (courseId){
   try{
-    await db.collection("courses").doc(courseId).delete();
+    //await db.collection("courses").doc(courseId).delete();
+      const classesCollRef = db.collection("classes"),
+          coursesCollRef = db.collection("courses"),
+          classQrySn = classesCollRef.where("courseId", "==", courseId),
+          associatedClassDocSns = (await classQrySn.get()).docs,
+          courseDocRef = coursesCollRef.doc( courseId);
+          //initiate batch write
+      const batch = db.batch();
+      for (const c of associatedClassDocSns){
+          batch.delete( c);
+      }
+      batch.delete( courseDocRef);
+      batch.commit(); //finish batch write
+      console.log(`Course with id "${courseId}" was deleted!`);
   } catch(e){
     console.log("Error deleting course with id " + courseId + ": " + e);
   }
@@ -250,7 +274,6 @@ Course.destroy = async function (courseId){
 /**
  *  Update a course
  */
-
  Course.update = async function({courseId, courseName, addedCategories, removedCategories, price, description}){
    const courseCollRef = db.collection("courses"),
          courseDocRef = courseCollRef.doc( courseId);

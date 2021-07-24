@@ -26,10 +26,10 @@ for (const frm of document.querySelectorAll("section > form")) {
     });
 }
 
-
 /**********************************************
  Use case Retrieve/List All Classes
  **********************************************/
+/*
 document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
         document.getElementById("Class-M").style.display = "none";
@@ -42,6 +42,7 @@ document.getElementById("retrieveAndListAll")
             await renderList( e.target.value);
         });
     });
+*/
 
 /**********************************************
  Use case Create Class
@@ -180,10 +181,17 @@ function refreshClasses() {
 /**********************************************
  * Refresh the Manage Class Data UI
  **********************************************/
-function refreshManageDataUI() {
+async function refreshManageDataUI() {
     // show the manage class UI and hide the other UIs
+    document.getElementById("Class-R").style.display = "block";
+    const selectOrderEl = document.querySelector("section#Class-R>div>div>label>select");
+    await renderList("classId");
+    selectOrderEl.addEventListener("change", async function (e) {
+        // invoke list with order selected
+        await renderList( e.target.value);
+    });
+
     document.getElementById("Class-M").style.display = "block";
-    document.getElementById("Class-R").style.display = "none";
     document.getElementById("Class-C").style.display = "none";
     document.getElementById("Class-U").style.display = "none";
     document.getElementById("Class-D").style.display = "none";
