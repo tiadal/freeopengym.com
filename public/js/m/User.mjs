@@ -4,13 +4,19 @@ import {NoConstraintViolation, MandatoryValueConstraintViolation,
     IntervalConstraintViolation, ReferentialIntegrityConstraintViolation}
     from "../../lib/errorTypes.mjs";
 
+const usertype = {
+  USER: "User",
+  TEACHER: "Teacher"
+};
+
 class User{
-  constructor({userid, username, password, dateOfBirth, bio/*, user_type, myCourses, joinedClasses, iFollow, followers*/}){
+  constructor({userid, username, password, dateOfBirth, bio, user_type/*, myCourses, joinedClasses, iFollow, followers*/}){
     this.userId = userId;
     this.username = username;
     this.password = password;
     this.birthday = dateOfBirth;
     this.bio = bio;
+    this.user_type = user_type;
   }
 
   get userId(){
@@ -31,7 +37,7 @@ class User{
       return new MandatoryValueConstraintViolation("A UserId must be provided");
     } else if(!isIntegerOrIntegerString(userId)){
       return new RangeConstraintViolation("The UserId must be an unsigned Integer");
-    } else if(!parseInt(courseId < 1)){
+    } else if(!parseInt(userId < 1)){
       return new RangeConstraintViolation("The UserId must be an unsigned Integer");
     } else{
       return new NoConstraintViolation();
@@ -39,7 +45,7 @@ class User{
   }
 
   static async checkUserIdAsId(userId){
-    let validationResult = User.checkUserId(courseId);
+    let validationResult = User.checkUserId(userId);
     if(validationResult instanceof NoConstraintViolation){
       let userDoc = await db.collection("users").doc(userId.toString()).get();
       if(userDoc.exists){
@@ -105,20 +111,99 @@ class User{
       this._birthday = birthday;
     }
   }
+
+  get user_type(){
+    return this._user_type;
+  }
+
+  set user_type(type){
+    const validationResult = User.checkUserType(type);
+    if(validationResult instanceof NoConstraintViolation){
+      this._user_type = type;
+    } else {
+      throw validationResult;
+    }
+  }
+
+  static checkUserType(type){
+    if(!type){
+      return new MandatoryValueConstraintViolation("A Usertype must be selected");
+    } else if(!(type == usertype.USER || type == usertype.TEACHER)){
+      return new RangeConstraintViolation("Invalid Usertype provided");
+    } else{
+      return new NoConstraintViolation();
+    }
+  }
+}
+
+User.convert = function(user){
+  let slots = {
+    userId: user.userId,
+    username: user.username,
+    password: user.password,
+    birthday: user.dateOfBirth,
+    bio: user.bio,
+    user_type: user.user_type
+  }
+  if(user.birthday){
+    slots.birthday = user.birthday;
+  }
+
+  return slots
 }
 
 User.add = async function(slots){
-
+  const userCollRef = db.collection("users"),
+        userDocRef = userCollRef.doc( slots.userId.toString());
+  try {
+      let c = new User(slots);
+      let validationResult = await User.checkUserIdAsId( c.userId);
+      if(!validationResult instanceof NoConstraintViolation) throw validationResult;
+      validationResult = await User.checkUserIdAsIdRef( c.userId);
+      if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+      await userDocRef.set(User.convert( c));
+  } catch (e) {
+      console.error(`Error when adding user record: ${e.message}`);
+      return;
+  }
+  console.log(`User record ${slots.userId} created`);
 }
 
 User.destroy = async function(userId){
 
 }
 
-User.update = async function({userid, username, password, dateOfBirth, bio/*, user_type, myCourses, joinedClasses, iFollow, followers*/}){
+User.update = async function({userid, username, password, dateOfBirth, bio/*, user_type, myUsers, joinedClasses, iFollow, followers*/}){
+  const userCollRef = db.collection("users"),
+  userDocRef = userCollRef.doc( userId);
 
+  try {
+    // Merge existing data with updated data
+    const userDocSn = await userDocRef.withConverter(User.converter).get();
+    const userData = userDocSn.data();
+
+    let user = new User({userid, username, password, dateOfBirth, bio, user_type});
+
+    //await userDocRef.set({userId, userName, categories, price, description}, {merge: true});
+    await userDocRef.set({userId: user.userId, userName: user.username, password: user.password, dateOfBirth: user.birthday, bio: user.bio, user_type: user.user_type}, {merge: true});
+ } catch (e) {
+   console.error(`Error when updating user record: ${e.message}`);
+   return;
+ }
+ console.log(`User record ${userId} updated`);
 }
 
 User.retrieveAll = async function(){
-
+  const usersCollRef = db.collection("users");
+  let usersQuerySnapshot = null;
+  try {
+      usersQuerySnapshot = await usersCollRef.get();
+  } catch (e) {
+      console.error(`Error when retrieving user record ${e}`)
+      return null;
+  }
+  const userDocs = usersQuerySnapshot.docs,
+        userRecords = userDocs.map( d => d.data());
+  console.log(`${userRecords.length} user records retrieved.`);
+  return userRecords;
 }
