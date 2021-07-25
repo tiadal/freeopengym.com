@@ -10,13 +10,29 @@ const usertype = {
 };
 
 class User{
-  constructor({userid, username, password, dateOfBirth, bio, user_type/*, myCourses, joinedClasses, iFollow, followers*/}){
+  constructor({userid, username, password, dateOfBirth, bio, user_type, myCourses, joinedClasses, iFollow, followers}){
     this.userId = userId;
     this.username = username;
     this.password = password;
     this.birthday = dateOfBirth;
     this.bio = bio;
     this.user_type = user_type;
+
+    if(myCourses){
+      this.myCourses = myCourses;
+    }
+
+    if(joinedClasses){
+      this.joinedClasses = joinedClasses;
+    }
+
+    if(iFollow){
+      this.iFollow = iFollow;
+    }
+
+    if(followers){
+      this.followers = followers;
+    }
   }
 
   get userId(){
@@ -132,6 +148,94 @@ class User{
       return new RangeConstraintViolation("Invalid Usertype provided");
     } else{
       return new NoConstraintViolation();
+    }
+  }
+
+  get myCourses(){
+    return this._myCourses;
+  }
+
+  set myCourses(courses){
+    this._myCourses = [];
+    if(Array.isArray(courses)){
+      for(const i of courses){
+        this.addMyCourse(i);
+      }
+    }
+  }
+
+  addMyCourse(course){
+    const validationResult = Course.checkCourseId(course.courseId);
+    if(validationResult instanceof NoConstraintViolation){
+      this._myCourses.push(course);
+    } else {
+      throw validationResult;
+    }
+  }
+
+  get joinedClasses(){
+    return this._joinedClasses;
+  }
+
+  set joinedClasses(classes){
+    this._joinedClasses = [];
+    if(Array.isArray(classes)){
+      for(const i of classes){
+        this.addJoinedClass(i);
+      }
+    }
+  }
+
+  addJoinedClass(joinedClass){
+    const validationResult = Class.checkClassId(joinedClass.classId);
+    if(validationResult instanceof NoConstraintViolation){
+      this._joinedClass.push(joinedClass);
+    } else {
+      throw validationResult;
+    }
+  }
+
+  get iFollow(){
+    return this._iFollow;
+  }
+
+  set iFollow(follow){
+    this._iFollow = [];
+    if(Array.isArray(follow)){
+      for(const i of follow){
+        this.addFollow(i);
+      }
+    }
+  }
+
+  addFollow(follow){
+    const validationResult = User.checkUserId(follow.userId);
+    if(validationResult instanceof NoConstraintViolation){
+      this._iFollow.push(follow);
+    } else {
+      throw validationResult;
+    }
+  }
+
+  get followers(){
+    return this._followers;
+  }
+
+  set myCourses(followers){
+    this._followers = [];
+    if(Array.isArray(followers)){
+      for(const i of followers){
+        this.addFollower(i);
+      }
+    }
+  }
+
+  addFollower(follower){
+    const validationResult = User.checkUserId(follower.userId);
+    if(validationResult instanceof NoConstraintViolation){
+      this._followers.push(follower);
+    } else {
+      throw validationResult;
     }
   }
 }
