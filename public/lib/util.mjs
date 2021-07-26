@@ -499,7 +499,16 @@ function createChoiceWidget( containerEl, fld, values,
   return containerEl;
 }
 
+/**
+ * @param {Map} map mapping to search key inside
+ * @param {Object} value value to search key for
+ * @return Key that points to value
+ */
+function getKeyByValue(map, value){
+  return Object.keys(map).find(key => map[key] === value);
+}
+
 
 export { fillSelectWithOptions, fillSelectWithEnum, createListFromMap, createMultipleChoiceWidget,
   createMultipleChoiceWidgetWithEnum, cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar,
-  createChoiceWidget};
+  createChoiceWidget, getKeyByValue};

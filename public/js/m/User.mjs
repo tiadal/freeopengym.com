@@ -311,3 +311,5 @@ User.retrieveAll = async function(){
   console.log(`${userRecords.length} user records retrieved.`);
   return userRecords;
 }
+
+export {User, usertype};
