@@ -422,6 +422,84 @@ function showProgressBar (status) {
   if (status === "hide") progressEl.hidden = true;
 }
 
+/**
+ * * Create a choice control (radio button or checkbox) element
+ *
+ * @param {string} t  The type of choice control ("radio" or "checkbox")
+ * @param {string} n  The name of the choice control input element
+ * @param {string} v  The value of the choice control input element
+ * @param {string} lbl  The label text of the choice control
+ * @return {object}
+ */
+function createLabeledChoiceControl( t,n,v,lbl) {
+  var ccEl = document.createElement("input"),
+    lblEl = document.createElement("label");
+  ccEl.type = t;
+  ccEl.name = n;
+  ccEl.value = v;
+  lblEl.appendChild( ccEl);
+  lblEl.appendChild( document.createTextNode( lbl));
+  return lblEl;
+}
+/**
+ * Create a choice widget in a given fieldset element.
+ * A choice element is either an HTML radio button or an HTML checkbox.
+ * @method
+ */
+function createChoiceWidget( containerEl, fld, values,
+                             choiceWidgetType, choiceItems, isMandatory) {
+  const choiceControls = containerEl.querySelectorAll("label");
+  // remove old content
+  for (const j of choiceControls.keys()) {
+    containerEl.removeChild( choiceControls[j]);
+  }
+  if (!containerEl.hasAttribute("data-bind")) {
+    containerEl.setAttribute("data-bind", fld);
+  }
+  // for a mandatory radio button group initialze to first value
+  if (choiceWidgetType === "radio" && isMandatory && values.length === 0) {
+  values[0] = 1;
+  }
+  if (values.length >= 1) {
+    if (choiceWidgetType === "radio") {
+      containerEl.setAttribute("data-value", values[0]);
+    } else {  // checkboxes
+      containerEl.setAttribute("data-value", "["+ values.join() +"]");
+    }
+  }
+  for (const j of choiceItems.keys()) {
+    // button values = 1..n
+    const el = createLabeledChoiceControl( choiceWidgetType, fld,
+        j+1, choiceItems[j]);
+    // mark the radio button or checkbox as selected/checked
+    if (values.includes(j+1)) el.firstElementChild.checked = true;
+    containerEl.appendChild( el);
+    el.firstElementChild.addEventListener("click", function (e) {
+      const btnEl = e.target;
+      if (choiceWidgetType === "radio") {
+        if (containerEl.getAttribute("data-value") !== btnEl.value) {
+          containerEl.setAttribute("data-value", btnEl.value);
+        } else if (!isMandatory) {
+          // turn off radio button
+          btnEl.checked = false;
+          containerEl.setAttribute("data-value", "");
+        }
+      } else {  // checkbox
+        let values = JSON.parse( containerEl.getAttribute("data-value")) || [];
+        let i = values.indexOf( parseInt( btnEl.value));
+        if (i > -1) {
+          values.splice(i, 1);  // delete from value list
+        } else {  // add to value list
+          values.push( btnEl.value);
+        }
+        containerEl.setAttribute("data-value", "["+ values.join() +"]");
+      }
+    });
+  }
+  return containerEl;
+}
+
 
 export { fillSelectWithOptions, fillSelectWithEnum, createListFromMap, createMultipleChoiceWidget,
-  createMultipleChoiceWidgetWithEnum, cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar };
+  createMultipleChoiceWidgetWithEnum, cloneObject, isIntegerOrIntegerString, isNonEmptyString, showProgressBar,
+  createChoiceWidget};

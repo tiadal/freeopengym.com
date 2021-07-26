@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
+
+    <title>Signup</title>
+
+    <script src="js/c/initialize.mjs"></script>
+    <script src="js/v/users.mjs" type="module"></script>
+    <!--<script src="js/v/authenticateUser.mjs"></script>-->
+    <!--<script>
+      //evaluate user authentication status
+      auth.onAuthStateChanged( function (user){
+        if (!user) { //if user status is uknown
+          //sign in user as 'anonymous'
+          auth.signInAnonymously();
+        }
+      });
+      window.addEventListener("load", authenticateUser.setupSigninAndSignup);
+    </script>-->
+  </head>
+  <header>
+    <div id="login-management" class="login-management">
+      <span hidden="hidden">
+        <button  class="log-buttons" type="button" onclick="location.href='authenticateUser.html'">
+          Sign in or Sign up
+        </button>
+      </span>
+      <span hidden="hidden"><button type="button" class="log-buttons">Sign out</button></span>
+      <span hidden="hidden">Check your email for instructions to verify your account.</span>
+    </div>
+    <div class="wrapper clearfix">
+      <div class="title">
+        <figure><img src="favicon.ico" alt="Logo"></figure>
+        <h1>Welcome to Freeopengym!</h1>
+        <h2>Sign in or sign up!</h2>
+      </div>
+    </div>
+  </header>
+  <body>
+    <div class="login-form">
+      <form id="User">
+        <div>
+          <p><label>Email: </label><input name="email" type="email"/></p>
+        </div>
+        <div>
+          <p><label>Name: </label><input name="userName" type="name"/></p>
+        </div>
+        <div>
+          <p><label>Password: </label><input name="password" type="password"/></p>
+        </div>
+        <!--<div class="select-many">
+            <label>Categories:
+                <select name="selectCategories" multiple="multiple"></select>
+            </label>
+        </div>-->
+        <!--<div>
+            <p><label>Usertype: </label><input name="userType" type="type"/></p>
+        </div>-->
+        <fieldset data-bind="type">
+          <legend>Usertype: </legend>
+        </fieldset>
+        <div>
+          <p>
+            <label>Description: </label>
+            <textarea id="description" name="description" type="bio" rows="5" cols="40"></textarea>
+          </p>
+        </div>
+        <div>
+          <button type="button" id="signup">Sign up</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
