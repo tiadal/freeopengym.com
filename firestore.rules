@@ -10,6 +10,16 @@ service cloud.firestore {
     function checkClassIdAsId( classId) {
       return !(exists(/databases/$(database)/documents/classes/$(classId)));
     }
+
+    function checkCourseId( courseId) {
+        return (courseId is int || courseId is string) && courseId != null;
+    }
+    // check if exist document with same courseId
+    function checkCourseIdAsId( courseId) {
+        return !(exists(/databases/$(database)/documents/courses/$(courseId)));
+    }
+
+
     /** VALIDATION RULES **/
     match /{classes}/{document=**} {
       /** RULES FOR allow read WITH CONVENIENCE METHOD - LOW GRANULARITY **/
@@ -46,7 +56,7 @@ service cloud.firestore {
       //validate when create new course record
       allow create: if request.auth.token.email_verified == true
                        && checkCourseIdAsId( request.resource.data.courseId) == true
-                       && checkClassId( request.resource.data.courseId) == true
+                       && checkCourseId( request.resource.data.courseId) == true
 		       && request.resource.data.courseName != null
                        && request.resource.data.categories != null
                        && request.resource.data.price != null;
@@ -56,8 +66,8 @@ service cloud.firestore {
                        && (request.resource.data.diff( resource.data).affectedKeys()
                            .hasOnly(['courseName', 'price', 'categories']))
                        && request.resource.data.courseName != null
-                       && request.resource.data.categories != null;
-		       && request.resource.data.price != null
+                       && request.resource.data.categories != null
+		               && request.resource.data.price != null;
 
       // validate when delete class record
       allow delete: if request.auth.token.email_verified == true;
