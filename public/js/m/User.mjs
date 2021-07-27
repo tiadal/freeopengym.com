@@ -10,7 +10,7 @@ const usertype = {
 };
 
 class User{
-  constructor({userid, username, password, dateOfBirth, bio, user_type, myCourses, joinedClasses, iFollow, followers}){
+  constructor({userId, username, password, dateOfBirth, bio, user_type, myCourses, joinedClasses, iFollow, followers}){
     this.userId = userId;
     this.username = username;
     this.password = password;
@@ -40,7 +40,7 @@ class User{
   }
 
   set userId(userId){
-    const validationResult = checkUserId(userId);
+    const validationResult = User.checkUserId(userId);
     if(validationResult instanceof NoConstraintViolation){
       this._userId = userId;
     } else{
@@ -53,7 +53,7 @@ class User{
       return new MandatoryValueConstraintViolation("A UserId must be provided");
     } else if(!isIntegerOrIntegerString(userId)){
       return new RangeConstraintViolation("The UserId must be an unsigned Integer");
-    } else if(!parseInt(userId < 1)){
+    } else if(parseInt(userId) < 1){
       return new RangeConstraintViolation("The UserId must be an unsigned Integer");
     } else{
       return new NoConstraintViolation();
@@ -100,7 +100,7 @@ class User{
   }
 
   set password(password){
-    const validationResult = User.checkPassword();
+    const validationResult = User.checkPassword(password);
     if(validationResult instanceof NoConstraintViolation){
       this._password = password;
     } else {
@@ -125,6 +125,7 @@ class User{
   set birthday(birthday){
     if(birthday){
       this._birthday = birthday;
+      console.log(this._birthday);
     }
   }
 
@@ -144,7 +145,7 @@ class User{
   static checkUserType(type){
     if(!type){
       return new MandatoryValueConstraintViolation("A Usertype must be selected");
-    } else if(!(type == usertype.USER || type == usertype.TEACHER)){
+    } else if(!usertype[type]){
       return new RangeConstraintViolation("Invalid Usertype provided");
     } else{
       return new NoConstraintViolation();
@@ -221,7 +222,9 @@ class User{
     return this._followers;
   }
 
-  set myCourses(followers){
+
+
+  set followers(followers){
     this._followers = [];
     if(Array.isArray(followers)){
       for(const i of followers){
@@ -245,12 +248,13 @@ User.convert = function(user){
     userId: user.userId,
     username: user.username,
     password: user.password,
-    birthday: user.dateOfBirth,
-    bio: user.bio,
     user_type: user.user_type
   }
   if(user.birthday){
     slots.birthday = user.birthday;
+  }
+  if(user.bio){
+    slots.bio = user.bio;
   }
 
   return slots
@@ -263,8 +267,8 @@ User.add = async function(slots){
       let c = new User(slots);
       let validationResult = await User.checkUserIdAsId( c.userId);
       if(!validationResult instanceof NoConstraintViolation) throw validationResult;
-      validationResult = await User.checkUserIdAsIdRef( c.userId);
-      if (!validationResult instanceof NoConstraintViolation) throw validationResult;
+      //validationResult = await User.checkUserIdAsIdRef( c.userId);
+      //if (!validationResult instanceof NoConstraintViolation) throw validationResult;
       await userDocRef.set(User.convert( c));
   } catch (e) {
       console.error(`Error when adding user record: ${e.message}`);

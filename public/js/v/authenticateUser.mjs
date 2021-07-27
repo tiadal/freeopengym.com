@@ -87,31 +87,32 @@ setupSignInAndSignUp = function(){
 }
 
 handleSignUpButton = async function (){
-  const formEl = document.forms["User"],
-      email = formEl.email.value,
-      password = formEl.password.value;
-  if (email && password) {
-    try {
-      // get 'anonymous' user data from IndexedDB
-      const userRef = await auth.currentUser;
-      // create credential providing email and password
-      const credential = firebase.auth.EmailAuthProvider.credential( email, password);
-      // create a 'registered' user merging credential with 'anonymous' user data
-      await userRef.linkWithCredential( credential);
-      // send verification email
-      await userRef.sendEmailVerification();
-      console.log (`User ${email} became 'Registered'`);
-      alert (`Account created ${email}.\n\nCheck your email for instructions to verify this account.`);
-      window.location.pathname = "/index.html";
-    } catch (e) {
-      const divEl = document.getElementById("error"),
-          smallEl = divEl.querySelector("small");
-      smallEl.textContent = e.message;
-      divEl.hidden = false;
-    }
-  } else {
-    console.log("There is no username or/and password.");
-  }
+  window.location.pathname = "signup.html";
+  //const formEl = document.forms["User"],
+  //    email = formEl.email.value,
+  //    password = formEl.password.value;
+  //if (email && password) {
+  //  try {
+  //    // get 'anonymous' user data from IndexedDB
+  //    const userRef = await auth.currentUser;
+  //    // create credential providing email and password
+  //    const credential = firebase.auth.EmailAuthProvider.credential( email, password);
+  //    // create a 'registered' user merging credential with 'anonymous' user data
+  //    await userRef.linkWithCredential( credential);
+  //    // send verification email
+  //    await userRef.sendEmailVerification();
+  //    console.log (`User ${email} became 'Registered'`);
+  //    alert (`Account created ${email}.\n\nCheck your email for instructions to verify this account.`);
+  //    window.location.pathname = "/index.html";
+  //  } catch (e) {
+  //    const divEl = document.getElementById("error"),
+  //        smallEl = divEl.querySelector("small");
+  //    smallEl.textContent = e.message;
+  //    divEl.hidden = false;
+  //  }
+  //} else {
+  //  console.log("There is no username or/and password.");
+  //}
 }
 
 handleSignInButton = async function (){
