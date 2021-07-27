@@ -14,6 +14,18 @@ for(const i in usertype){
 createChoiceWidget( usertypeEl, "userType", [],
     "radio", types, false);
 
+formEl.userName.addEventListener("input", function(){
+  formEl.userName.setCustomValidity(
+    User.checkUserName(formEl.userName.value).message
+  );
+})
+
+formEl.password.addEventListener("input", function(){
+  formEl.password.setCustomValidity(
+    User.checkPassword(formEl.password.value).message
+  );
+})
+
 signupButEl.addEventListener("click", async function(){
   const name = formEl.userName.value;
   const email = formEl.email.value;
