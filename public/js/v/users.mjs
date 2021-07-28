@@ -47,9 +47,20 @@ signupButEl.addEventListener("click", async function(){
   console.log(bio);
   console.log(uType);
 
+  const users = await User.retrieveAll();
+
+  let highest = 0;
+  for(const i of users){
+    if(highest < parseInt(i.userId)){
+      highest = parseInt(i.userId);
+    }
+  }
+
+  console.log(users);
+
   try{
     const slots = {
-      userId: 1,
+      userId: highest + 1,
       username: name,
       password: pw,
       bio: bio,
@@ -67,7 +78,6 @@ signupButEl.addEventListener("click", async function(){
     }
 
     const user = new User(slots);
-    User.add(user);
     console.log(user);
 
     // get 'anonymous' user data from IndexedDB
@@ -79,6 +89,7 @@ signupButEl.addEventListener("click", async function(){
     // send verification email
     await userRef.sendEmailVerification();
     console.log (`User ${email} became 'Registered'`);
+    await User.add(user);
     alert (`Account created ${email}.\n\nCheck your email for instructions to verify this account.`);
     window.location.pathname = "/index.html";
   } catch(e){

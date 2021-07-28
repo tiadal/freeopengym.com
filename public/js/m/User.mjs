@@ -365,6 +365,45 @@ User.convert = function(user){
   return slots
 }
 
+User.converter = {
+    toFirestore: function (user) {
+      let slots = {
+        userId: user.userId,
+        username: user.username,
+        password: user.password,
+        user_type: user.user_type,
+        myCourses: user.myCourses,
+        joinedClasses: user.joinedClasses,
+        iFollow: user.iFollow,
+        followers: user.followers
+      }
+      if(user.birthday){
+        slots.birthday = user.birthday;
+      }
+      if(user.bio){
+        slots.bio = user.bio;
+      }
+        const data = {
+            userId: slots.userId,
+            username: slots.username,
+            password: slots.password,
+            dateOfBirth: slots.birthday,
+            bio: slots.bio,
+            user_type: slots.user_type,
+            myCourses: slots.myCourses,
+            joinedClasses: slots.joinedClasses,
+            ifollow: slots.iFollow,
+            followers: slots.followers
+        };
+
+        return data;
+    },
+    fromFirestore: function (snapshot, options) {
+        const data = snapshot.data( options);
+        return new User( data);
+    },
+};
+
 User.add = async function(slots){
   const userCollRef = db.collection("users"),
         userDocRef = userCollRef.doc( slots.userId.toString());
@@ -383,7 +422,13 @@ User.add = async function(slots){
 }
 
 User.destroy = async function(userId){
-
+  try{
+    console.log(userId);
+      await db.collection("users").doc(userId.toString()).delete();
+      console.log(`User record "${userId}" deleted!`);
+  } catch(e){
+      console.log("Error deleting class with id " + classId + ": " + e);
+  }
 }
 
 User.update = async function({userid, username, password, dateOfBirth, bio/*, user_type, myUsers, joinedClasses, iFollow, followers*/}){

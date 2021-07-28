@@ -1,0 +1,14 @@
+[
+  {
+    "userId": 1,
+    "username": "jez",
+    "password": "einjez42",
+    "dateOfBirth": "2015-4-1",
+    "bio": "some jez",
+    "user_type": "TEACHER",
+    "myCourses": [],
+    "joinedClasses": [],
+    "ifollow": [],
+    "followers": []
+  }
+]
