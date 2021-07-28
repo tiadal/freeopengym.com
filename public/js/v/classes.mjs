@@ -9,8 +9,6 @@ import {fillSelectWithOptions, showProgressBar} from "../../lib/util.mjs";
  Set up general, use-case-independent UI elements
  ***************************************************************/
 
-//TODO: user should not be able to input id -- at best let it be automatic
-
 // Set up Manage Class UI
 refreshManageDataUI();
 
@@ -29,7 +27,6 @@ for (const frm of document.querySelectorAll("section > form")) {
 /**********************************************
  Use case Retrieve/List All Classes
  **********************************************/
-/*
 document.getElementById("retrieveAndListAll")
     .addEventListener("click", async function () {
         document.getElementById("Class-M").style.display = "none";
@@ -42,7 +39,6 @@ document.getElementById("retrieveAndListAll")
             await renderList( e.target.value);
         });
     });
-*/
 
 /**********************************************
  Use case Create Class
@@ -55,6 +51,10 @@ document.getElementById("create").addEventListener("click",async function () {
 });
 createFormEl.classId.addEventListener("input", function(){
     createFormEl.classId.setCustomValidity( Class.checkClassId( createFormEl.classId.value).message);
+});
+//checkClassId can be used also for courseId
+createFormEl.courseId.addEventListener("input",function(){
+    createFormEl.courseId.setCustomValidity( Class.checkClassId( createFormEl.courseId.value).message);
 });
 createFormEl.endTime.addEventListener("input",function(){
     createFormEl.endTime.setCustomValidity( Time.checkTimes( createFormEl.startTime.value, createFormEl.endTime.value).message);
@@ -72,11 +72,13 @@ createFormEl["commit"].addEventListener("click", async function () {
     const timeValues = Object.values(time);
     const slots = {
         classId: parseInt(createFormEl.classId.value),
+        courseId: parseInt(createFormEl.courseId.value),
         classTime: timeValues,
         classLocation: createFormEl.classLocation.value
     };
     showProgressBar( "show");
     createFormEl.classId.setCustomValidity(( await Class.checkClassIdAsId( slots.classId)).message);
+    createFormEl.courseId.setCustomValidity(( await Class.checkCourseId( slots.courseId)).message);
     createFormEl.classDate.setCustomValidity( Time.checkClassDate( slots.classTime[0]).message);
     createFormEl.startTime.setCustomValidity( Time.checkStartTime( slots.classTime[1]).message);
     createFormEl.endTime.setCustomValidity( Time.checkEndTime( slots.classTime[2]).message);
@@ -182,16 +184,8 @@ function refreshClasses() {
  * Refresh the Manage Class Data UI
  **********************************************/
 async function refreshManageDataUI() {
-    // show the manage class UI and hide the other UIs
-    document.getElementById("Class-R").style.display = "block";
-    const selectOrderEl = document.querySelector("section#Class-R>div>div>label>select");
-    await renderList("classId");
-    selectOrderEl.addEventListener("change", async function (e) {
-        // invoke list with order selected
-        await renderList( e.target.value);
-    });
-
     document.getElementById("Class-M").style.display = "block";
+    document.getElementById("Class-R").style.display = "none";
     document.getElementById("Class-C").style.display = "none";
     document.getElementById("Class-U").style.display = "none";
     document.getElementById("Class-D").style.display = "none";
@@ -238,6 +232,7 @@ async function renderList( order) {
 
         let row = tableBodyEl.insertRow();
         row.insertCell(-1).textContent = c.classId;
+        row.insertCell(-1).textContent = c.courseId;
         row.insertCell(-1).textContent = timesStr;
         row.insertCell(-1).textContent = c.classLocation;
     }

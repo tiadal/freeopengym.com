@@ -15,10 +15,9 @@ import Time from "./Time.mjs";
 class Class {
     constructor({classId, classTime, classLocation, courseId}) {
         this.classId = classId;
+        this.courseId = courseId;
         this.classTime = classTime;
         this.classLocation = classLocation;
-
-        this.courseId = courseId;
     }
     get classId(){
         return this._classId;
@@ -121,15 +120,8 @@ class Class {
         }
         return validationResult;
     }
-    //TODO
     set courseId(courseId){
-        //const validationResult = Class.checkCourseId( courseId);
-        let validationResult = new NoConstraintViolation();
-        if (validationResult instanceof NoConstraintViolation){
-            this._courseId = courseId;
-        } else {
-            throw validationResult
-        }
+        this._courseId = courseId;
     }
 
     // Serialize class object

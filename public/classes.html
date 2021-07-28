@@ -31,39 +31,14 @@
     <main>
         <div class="wrapper clearfix">
             <!-- ======================================================= -->
-            <section id="Class-R" class="UI-Page">
-                <!-- ======================================================= -->
-                <h1 class="show-retrieve">Class details</h1>
-                <div class="wrapper clearfix">
-                    <hr>
-                    <div>
-                        <label>Ordered by:
-                            <select>
-                                <option value="classId">ID</option>
-                                <option value="classTime">Time</option>
-                                <option value="classLocation">Location</option>
-                            </select>
-                        </label>
-                    </div>
-                    <progress hidden="hidden" max="100">%</progress>
-
-                    <table id="classTable">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Time</th>
-                            <th>Location</th>
-                        </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </section>
-            <!-- ======================================================= -->
             <section id="Class-M" class="UI-Page">
                 <!-- ======================================================= -->
                 <ul class="menu">
-                    <p>(This part should be visible only for teachers)</p>
+                    <li>
+                        <button type="button" id="retrieveAndListAll">
+                            List all classes
+                        </button>
+                    </li>
                     <li>
                         <button type="button" id="create">
                             Create a new class
@@ -83,7 +58,40 @@
                     <div class="button"><a href="index.html"><button type = "button" id = "btm">Back to Main menu</button></a></div>
                 </ul>
             </section>
+            <!-- ======================================================= -->
+            <section id="Class-R" class="UI-Page">
+            <!-- ======================================================= -->
+                <h1 class="show-retrieve">Class details</h1>
+                <div class="wrapper clearfix">
+                    <hr>
+                    <div>
+                        <label>Ordered by:
+                            <select>
+                                <option value="classId">ID</option>
+                                <option value="courseId">Course ID</option>
+                                <option value="classTime">Time</option>
+                                <option value="classLocation">Location</option>
+                            </select>
+                        </label>
+                    </div>
+                    <progress hidden="hidden" max="100">%</progress>
 
+                    <table id="classTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Course</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="back-to-menu">Back to menu</button>
+                </div>
+            </section>
             <!-- ======================================================= -->
             <section id="Class-C" class="UI-Page">
                 <!-- ======================================================= -->
@@ -91,6 +99,9 @@
                 <form>
                     <div class="field">
                         <label>ID: <input type="text" name="classId"></label>
+                    </div>
+                    <div class="field">
+                        <label>Course ID: <input type="text" name="courseId"/></label>
                     </div>
                     <div class="field">
                         <label>Date:<input type="date" name="classDate"></label>
