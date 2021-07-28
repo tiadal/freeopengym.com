@@ -26,6 +26,12 @@ formEl.password.addEventListener("input", function(){
   );
 })
 
+formEl.birthday.addEventListener("input", function(){
+  formEl.birthday.setCustomValidity(
+    User.checkBirthday(formEl.birthday.value).message
+  );
+})
+
 signupButEl.addEventListener("click", async function(){
   const name = formEl.userName.value;
   const email = formEl.email.value;

@@ -124,9 +124,114 @@ class User{
 
   set birthday(birthday){
     if(birthday){
+      const validationResult = User.checkBirthday(birthday);
       this._birthday = birthday;
       console.log(this._birthday);
     }
+  }
+
+  static checkBirthday(date){
+    if(!date){
+      // optional
+      return new NoConstraintViolation();
+    }
+
+    let strDate = null;
+    if(date instanceof Date){
+      // convert to string form for ease of computation
+      strDate = date.getFullYear() + "-" +
+        (date.getMonth() + 1) + "-" +
+        date.getDate();
+    } else if(typeof(date) == "string"){
+      if(!isNonEmptyString(date)){
+        // Given as string and empty
+        return new MandatoryValueConstraintViolation("A Release Date must be provided");
+      }
+      strDate = date;
+    } else{
+      // Wrong type given
+      return new RangeConstraintViolation("Wrong type given as Date");
+    }
+
+    // check if in correct format for further validation?
+    if((strDate.match(/-/g) || []).length != 2){
+      return new RangeConstraintViolation("Expected format as YYY-MM-DD");
+    }
+
+    const tmpDate = new Date(strDate);
+    strDate = tmpDate.getFullYear() + "-" + (tmpDate.getMonth() + 1) + "-" + tmpDate.getDate();
+
+    let tmp = strDate.split('-');
+    let ymd = [];
+    let mon31day = [1, 3, 5, 7, 8, 10, 12]; // Months with 31 days
+
+    if(tmp.length === 3){
+      if(!(isIntegerOrIntegerString(tmp[0]) &&
+        isIntegerOrIntegerString(tmp[1]) &&
+        isIntegerOrIntegerString(tmp[2])))
+      {
+        // Could not extract date numbers
+        return new RangeConstraintViolation("Expected format as YYYY-MM-DD");
+      }
+      ymd = [parseInt(tmp[0]), parseInt(tmp[1]), parseInt(tmp[2])];
+      // Filter out dates < 1895-12-28
+      if(ymd[0] < 1895){
+        return new IntervalConstraintViolation("The release date must be greater then 1895-12-28");
+      } else if(ymd[0] == 1895 && ymd[1] < 12){
+        return new IntervalConstraintViolation("The release date must be greater then 1895-12-28");
+      } else if(ymd[0] == 1895 && ymd[1] == 12 && ymd[2] < 28){
+        return new IntervalConstraintViolation("The release date must be greater then 1895-12-28");
+      }
+
+      // Day range check
+      if(typeof(mon31day.find(m => m === ymd[1])) !== 'undefined'){
+        if(ymd[2] > 31 || ymd[2] < 1){
+          return new IntervalConstraintViolation("This Date does not exist");
+        }
+      } else{
+        if(ymd[2] > 30 || ymd[2] < 1){
+          return new IntervalConstraintViolation("This Date does not exist");
+        }
+      }
+
+      // Month range check
+      if(ymd[1] < 1 || ymd[1] > 12){
+        return new IntervalConstraintViolation("This Date does not exist");
+      }
+
+      /*
+       * intercalary year
+       * Each 4 years is an intercalary year.
+       * If year % 100 is 0 then it is no intercalary year
+       * except year % 100 && year % 400 is true
+       *
+       * https://klexikon.zum.de/wiki/Schaltjahr
+       */
+      let schalt = !(ymd[0] % 4) && ((ymd[0] % 100) || !(ymd[0] % 400));
+
+      // Range test for days
+      if(ymd[2] < 1 || ymd[2] > 31){
+        return new IntervalConstraintViolation("A day must be given in the range 1 - 31");
+
+      // Range test for months
+      } else if(ymd[1] < 0 || ymd[1] > 12){
+        return new IntervalConstraintViolation("Months range from 1 to 12");
+
+      // intercalary year specials for february
+      } else if(schalt){
+        if(ymd[1] == 2 && ymd[2] > 29){
+          return new IntervalConstraintViolation("February cannot have more then 29 days");
+        }
+      } else if(!schalt){
+        if(ymd[1] == 2 && ymd[2] > 28){
+          return new IntervalConstraintViolation("Seems this is not an intercalary year");
+        }
+      }
+    } else{
+      return new RangeConstraintViolation("Expected format as YYYY-MM-DD");
+    }
+
+    return new NoConstraintViolation();
   }
 
   get user_type(){
